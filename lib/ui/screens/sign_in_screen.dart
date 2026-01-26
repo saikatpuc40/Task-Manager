@@ -1,6 +1,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/sign_up_screen.dart';
+import 'package:task_manager/ui/screens/email_verification_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
 
@@ -33,6 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 24),
                     TextFormField(
                       controller: _emailTEController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: "Email"
                       ),
@@ -53,7 +56,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     Center(
                       child: Column(
                         children: [
-                          TextButton(onPressed: (){},
+                          TextButton(onPressed: (){
+                            _onTapForgotPasswordButton();
+                          },
                               child: Text("Forgot Password?")
                           ),
                           RichText(text: TextSpan(
@@ -70,7 +75,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   color: AppColors.themeColor
                                 ),
                                 recognizer: TapGestureRecognizer()..onTap = (){
-                                  //Navigator.pushNamed(context, '/signup');
+                                  _onTapSignUpButton();
                                 }
                               )
 
@@ -89,6 +94,25 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
+  void _onTapSignUpButton(){
+    Navigator.push(context,
+      MaterialPageRoute(
+        builder: (context) => SignUpScreen(),
+      ),
+    );
+
+  }
+
+  void _onTapForgotPasswordButton(){
+    Navigator.push(context,
+      MaterialPageRoute(
+        builder: (context) => EmailVerificationScreen()
+      ),
+    );
+
+  }
+
   @override
   void dispose() {
     _passwordTEController.dispose();
