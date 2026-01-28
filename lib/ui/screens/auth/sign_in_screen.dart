@@ -1,8 +1,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/ui/screens/sign_up_screen.dart';
-import 'package:task_manager/ui/screens/email_verification_screen.dart';
+import 'package:task_manager/ui/screens/auth/email_verification_screen.dart';
+import 'package:task_manager/ui/screens/auth/sign_up_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
 
@@ -67,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.4,
                             ),
-                            text:"Don't hava an account? ",
+                            text:"Don't have an account? ",
                             children: [
                               TextSpan(
                                 text: 'Sign up',
