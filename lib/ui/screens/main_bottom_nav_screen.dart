@@ -4,7 +4,7 @@ import 'package:task_manager/ui/screens/completed_task_screen.dart';
 import 'package:task_manager/ui/screens/in_progress_task_screen.dart';
 import 'package:task_manager/ui/screens/new_task_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
-import 'package:task_manager/ui/widgets/network_cached_image.dart';
+import 'package:task_manager/ui/widgets/profile_app_bar.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -24,7 +24,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: profileAppBar(),
+      appBar: profileAppBar(context),
       body: _screens[_selectedIndex],
        bottomNavigationBar: BottomNavigationBar(
            currentIndex: _selectedIndex,
@@ -48,34 +48,4 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     );
   }
 }
-AppBar profileAppBar() {
-  return AppBar(
-    backgroundColor: AppColors.themeColor,
-    leading:  Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: CircleAvatar(
-        child: NetworkCachedImage(url: ''),
-      ),
-    ),
-    title: const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Saikat",
-          style: TextStyle(
-              fontSize: 16,
-              color: Colors.white
-          ),
-        ),
-        Text("saikat@gmail.com",
-          style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w500
-          ),)
-      ],
-    ),
-    actions: [
-      IconButton(onPressed: (){}, icon: const Icon(Icons.logout))
-    ],
-  );
-}
+
