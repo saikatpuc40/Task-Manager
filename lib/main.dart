@@ -4,10 +4,13 @@ import 'package:device_preview/device_preview.dart';
 
 void main(){
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => TaskManagerApp(), // Wrap your app
-    ),
+        const TaskManagerApp(), // Wrap your app
   );
+  // runApp(
+  //   DevicePreview(
+  //     enabled: true,
+  //     builder: (context) => TaskManagerApp(), // Wrap your app
+  //   ),
+  // );
 }
 
