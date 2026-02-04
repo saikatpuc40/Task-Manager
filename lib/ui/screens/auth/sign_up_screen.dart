@@ -185,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "firstName":_firstNameTEController.text.trim(),
       "lastName":_lastNameTEController.text.trim(),
       "mobile":_mobileTEController.text.trim(),
-      "password":_passwordTEController.text.trim(),
+      "password":_passwordTEController.text,
       "photo":""
     };
 
