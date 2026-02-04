@@ -24,6 +24,7 @@ class AuthControllers{
   static Future<void> saveUserData(UserModel user) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(_userDataKey, jsonEncode(user.toJson()));
+    userData = user;
   }
 
   static Future<UserModel?> getUserData() async{
@@ -37,8 +38,10 @@ class AuthControllers{
 
   static Future<void> clearAllData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.remove(_accessTokenKey);
-    await sharedPreferences.remove(_userDataKey);
+    await sharedPreferences.clear();
+
+    accessToken = '';
+    userData = null;
   }
 
   static Future<bool> checkAuthState() async{
