@@ -7,9 +7,12 @@ import 'package:task_manager/ui/controllers/auth_controllers.dart';
 class NetworkCaller{
   static Future<NetworkResponse> getRequest(String url) async{
     try {
+      debugPrint(url);
       Response response = await get(Uri.parse(url), headers: {
         'token' : AuthControllers.accessToken
       });
+      debugPrint(response.statusCode.toString());
+      debugPrint(response.body.toString());
       if(response.statusCode==200){
         final decodeData = jsonDecode(response.body);
         return NetworkResponse(

@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/models/task_model.dart';
+import 'package:task_manager/data/network_caller/network_caller.dart';
+import 'package:task_manager/data/utilities/urls.dart';
+import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends StatefulWidget {
   const TaskItem({
-    super.key, required this.taskModel,
+    super.key, required this.taskModel, required this.onUpdate,
   });
 
   final TaskModel taskModel;
+  final VoidCallback onUpdate;
+
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
+
+  bool _deleteTaskInProgress =false;
+  String dropdownValue = '';
+  List<String> statusList = ['New','In Progress','Completed','Cancelled'];
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownValue = widget.taskModel.status!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +35,19 @@ class TaskItem extends StatelessWidget {
       color: Colors.white,
       elevation: 0,
       child: ListTile(
-        title: Text(taskModel.title??''),
+        title: Text(widget.taskModel.title??''),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(taskModel.description??''),
-            Text('Date : ${taskModel.createdDate}',style: TextStyle(
+            Text(widget.taskModel.description??''),
+            Text('Date : ${widget.taskModel.createdDate}',style: TextStyle(
                 color:Colors.black,
                 fontWeight: FontWeight.w600
             ),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Chip(label: Text(taskModel.status?? "New",style: TextStyle(color: Colors.white),),shape: RoundedRectangleBorder(
+                Chip(label: Text(widget.taskModel.status?? "New",style: TextStyle(color: Colors.white),),shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)
                 ),
                   backgroundColor: Colors.lightBlue,
@@ -34,8 +55,32 @@ class TaskItem extends StatelessWidget {
                 ),
                 ButtonBar(
                   children: [
-                    IconButton(onPressed: (){}, icon: Icon(Icons.delete)),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.edit))
+                    Visibility(
+                      visible: _deleteTaskInProgress==false,
+                      replacement: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: IconButton(onPressed: (){
+                      _deleteTask();
+                      }, icon: Icon(Icons.delete)),
+                    ),
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.edit),
+                      onSelected: (String selectedValue) {
+                        dropdownValue = selectedValue;
+                        if(mounted){
+                          setState(() {});
+                        }
+                        },
+                      itemBuilder: (BuildContext context) {
+                        return statusList.map((String choice) {
+                          return PopupMenuItem<String>(
+                            value: choice,
+                            child: Text(choice),
+                          );
+                        }).toList();
+                      }
+                      ),
                   ],
 
                 )
@@ -48,4 +93,27 @@ class TaskItem extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> _deleteTask() async {
+    _deleteTaskInProgress =true;
+    if(mounted){
+      setState(() {});
+    }
+    NetworkResponse response = await NetworkCaller.getRequest(Urls.deleteTask(widget.taskModel.sId!));
+    if(response.isSuccess){
+      widget.onUpdate();
+
+    }
+    else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage?? 'Task Delete Failed!');
+      }
+    }
+    _deleteTaskInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+  }
+
+
 }
