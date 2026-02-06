@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:task_manager/data/models/network_response.dart';
+import 'package:task_manager/data/models/task_count_by_status.dart';
+import 'package:task_manager/data/models/task_count_by_status_wrapper_model.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/models/task_list_wrapper_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
@@ -22,12 +24,15 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getNewTaskScreenInProgress = false;
+  bool _getTaskStatusSectionInProgress = false;
   List<TaskModel> newTaskList=[];
+  List<TaskCountByStatus> taskCountByStatus = [];
 
   @override
   void initState() {
     super.initState();
     _getNewTask();
+    _getTaskStatus();
   }
 
 
@@ -44,6 +49,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               child: RefreshIndicator(
                 onRefresh: ()async{
                   _getNewTask();
+                  _getTaskStatus();
                 },
                 child: Visibility(
                 visible: _getNewTaskScreenInProgress==false,
@@ -55,6 +61,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                     itemBuilder: (context, index) {
                       return TaskItem(
                         taskModel: newTaskList[index],
+                        onUpdate: (){
+                          _getNewTask();
+                          _getTaskStatus();
+                        },
                       );
 
                     },
@@ -85,29 +95,47 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Widget _buildSummarySection() {
-    return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              TaskSummaryCard(
-                title: "New Task",
-                count: "12",
-              ),
-              TaskSummaryCard(
-                title: "Completed",
-                count: "12",
-              ),
-              TaskSummaryCard(
-                title: "In Progress",
-                count: "12",
-              ),
-              TaskSummaryCard(
-                title: "Cancelled",
-                count: "12",
-              ),
-            ],
+    return Visibility(
+      visible: _getTaskStatusSectionInProgress==false,
+      replacement: SizedBox(
+        height: 100,
+          child:Center(
+            child: CircularProgressIndicator(),
+          ) ,
+        ),
+      child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: taskCountByStatus.map((e){
+                return TaskSummaryCard(
+                  title: e.sId??" UnKnown ".toLowerCase(),
+                  count: e.sum.toString(),
+                );
+              },).toList()
+            ),
           ),
-        );
+    );
+  }
+
+  Future<void> _getTaskStatus() async {
+    _getTaskStatusSectionInProgress =true;
+    if(mounted){
+      setState(() {});
+    }
+    NetworkResponse response = await NetworkCaller.getRequest(Urls.taskStatusCount);
+    if(response.isSuccess){
+      TaskCountByStatusWrapperModel taskCountByStatusWrapperModel = TaskCountByStatusWrapperModel.fromJson(response.responseData);
+      taskCountByStatus = taskCountByStatusWrapperModel.taskCount??[];
+    }
+    else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage?? 'Get Task Status Failed!');
+      }
+    }
+    _getTaskStatusSectionInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
   }
 
   Future<void> _getNewTask() async {

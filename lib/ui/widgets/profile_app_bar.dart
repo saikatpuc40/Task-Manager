@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/controllers/auth_controllers.dart';
 import 'package:task_manager/ui/screens/auth/sign_in_screen.dart';
@@ -12,7 +14,12 @@ AppBar profileAppBar(context,[bool isUpdateProfile = false]) {
     leading:  Padding(
       padding: const EdgeInsets.all(8.0),
       child: CircleAvatar(
-        child: NetworkCachedImage(url: ''),
+        //child: NetworkCachedImage(url: ''),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.memory(base64Decode(AuthControllers.userData?.photo??''),
+          ),
+        ),
       ),
     ),
     title: GestureDetector(
