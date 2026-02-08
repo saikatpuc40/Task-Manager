@@ -20,6 +20,7 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
 
   bool _deleteTaskInProgress =false;
+  bool _updateTaskInProgress =false;
   String dropdownValue = '';
   List<String> statusList = ['New','In Progress','Completed','Cancelled'];
 
@@ -33,7 +34,7 @@ class _TaskItemState extends State<TaskItem> {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      elevation: 0,
+      elevation: 3,
       child: ListTile(
         title: Text(widget.taskModel.title??''),
         subtitle: Column(
@@ -68,15 +69,22 @@ class _TaskItemState extends State<TaskItem> {
                       icon: const Icon(Icons.edit),
                       onSelected: (String selectedValue) {
                         dropdownValue = selectedValue;
+                        debugPrint(dropdownValue);
                         if(mounted){
                           setState(() {});
                         }
+                        _updateTask();
                         },
                       itemBuilder: (BuildContext context) {
-                        return statusList.map((String choice) {
+                        return statusList.map((String value) {
                           return PopupMenuItem<String>(
-                            value: choice,
-                            child: Text(choice),
+                            value: value,
+                            child: ListTile(
+                                title: Text(value),
+                                trailing: dropdownValue == value
+                                    ? const Icon(Icons.done)
+                                    : null
+                            ),
                           );
                         }).toList();
                       }
@@ -110,6 +118,26 @@ class _TaskItemState extends State<TaskItem> {
       }
     }
     _deleteTaskInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+  }
+
+  Future<void> _updateTask() async {
+    _updateTaskInProgress =true;
+    if(mounted){
+      setState(() {});
+    }
+    NetworkResponse response = await NetworkCaller.getRequest(Urls.completedTask(widget.taskModel.sId!, dropdownValue));
+    if(response.isSuccess){
+      widget.onUpdate();
+    }
+    else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage?? 'Task Completed Failed!');
+      }
+    }
+    _updateTaskInProgress = false;
     if(mounted){
       setState(() {});
     }
