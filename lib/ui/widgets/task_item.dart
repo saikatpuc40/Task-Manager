@@ -128,7 +128,7 @@ class _TaskItemState extends State<TaskItem> {
     if(mounted){
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.completedTask(widget.taskModel.sId!, dropdownValue));
+    NetworkResponse response = await NetworkCaller.getRequest(Urls.updateTask(widget.taskModel.sId!, dropdownValue));
     if(response.isSuccess){
       widget.onUpdate();
     }
