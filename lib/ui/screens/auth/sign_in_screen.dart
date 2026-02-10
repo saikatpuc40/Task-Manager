@@ -28,6 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _SignInApiInProgress = false;
+  bool _showPassword = false;
 
 
   @override
@@ -68,9 +69,18 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _passwordTEController,
+                        obscureText: _showPassword == false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
-                            hintText: "Password"
+                            hintText: "Password",
+                            suffixIcon: IconButton(
+                                onPressed: (){
+                                  _showPassword=!_showPassword;
+                                  if(mounted){
+                                    setState(() {});
+                                  }
+                                },
+                                icon: Icon(_showPassword?Icons.visibility:Icons.visibility_off))
                         ),
                         validator: (String? value){
                           if(value?.isEmpty??true){

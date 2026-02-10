@@ -1,18 +1,27 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/network_response.dart';
+import 'package:task_manager/data/network_caller/network_caller.dart';
+import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
+import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  final String email;
+  final String otp;
+
+  const ResetPasswordScreen({super.key, required this.email, required this.otp});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+
+  bool _resetPasswordScreenInProgress = false;
 
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _confirmPasswordTEController = TextEditingController();
@@ -52,8 +61,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(onPressed: _onTapConfirmButton,
-                        child:Text("Confirm"),
+                    Visibility(
+                      visible: _resetPasswordScreenInProgress == false,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(onPressed: _onTapConfirmButton,
+                          child:Text("Confirm"),
+                      ),
                     ),
 
                     const SizedBox(height: 34,),
@@ -96,9 +111,44 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         MaterialPageRoute(builder: (context)=>SignInScreen()), (route)=>false);
 
   }
-
   void _onTapConfirmButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen(),),);
+    _resetPassword();
+  }
+  Future<void> _resetPassword() async {
+    _resetPasswordScreenInProgress = true;
+    if (mounted) setState(() {});
+
+    Map<String, dynamic> requestInput = {
+      "email": widget.email,
+      "OTP":widget.otp,
+      "password": _passwordTEController.text,
+
+    };
+
+    NetworkResponse response =
+    await NetworkCaller.postRequest(Urls.registration, body: requestInput);
+
+    _resetPasswordScreenInProgress = false;
+    if (mounted) setState(() {});
+
+    if (response.isSuccess) {
+      _clearTextFields();
+      if (mounted) {
+        showSnackBarMessage(context, 'Password Reset Successful');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen(),),);
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+            context, response.errorMessage ?? 'Password Reset Failed! Try Again.');
+      }
+    }
+  }
+
+  /// Clears all text fields after successful registration
+  void _clearTextFields() {
+    _confirmPasswordTEController.clear();
+    _passwordTEController.clear();
   }
 
   @override
