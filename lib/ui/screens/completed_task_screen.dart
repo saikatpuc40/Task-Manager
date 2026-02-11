@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/models/task_list_wrapper_model.dart';
 import 'package:task_manager/data/models/task_model.dart';
@@ -16,6 +17,7 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
+  NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool _getCompletedTaskScreenInProgress = false;
   List<TaskModel> completedTask = [];
@@ -61,7 +63,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
     if(mounted){
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.completedTask);
+    NetworkResponse response = await networkCaller.getRequest(Urls.completedTask);
     if(response.isSuccess){
       TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel.fromJson(response.responseData);
       completedTask = taskListWrapperModel.taskList??[];

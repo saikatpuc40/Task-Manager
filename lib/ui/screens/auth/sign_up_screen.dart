@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/utilities/urls.dart';
@@ -37,6 +38,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
+  NetworkCaller networkCaller = Get.find<NetworkCaller>();
   // -------------------------------------------------------------------------
   // Text Controllers
   // -------------------------------------------------------------------------
@@ -243,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     };
 
     NetworkResponse response =
-    await NetworkCaller.postRequest(Urls.registration, body: requestInput);
+    await networkCaller.postRequest(Urls.registration, body: requestInput);
 
     _registrationInProgress = false;
     if (mounted) setState(() {});

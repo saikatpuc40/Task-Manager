@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
@@ -18,6 +19,7 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
+  NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool _deleteTaskInProgress =false;
   bool _updateTaskInProgress =false;
@@ -107,7 +109,7 @@ class _TaskItemState extends State<TaskItem> {
     if(mounted){
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.deleteTask(widget.taskModel.sId!));
+    NetworkResponse response = await networkCaller.getRequest(Urls.deleteTask(widget.taskModel.sId!));
     if(response.isSuccess){
       widget.onUpdate();
 
@@ -128,7 +130,7 @@ class _TaskItemState extends State<TaskItem> {
     if(mounted){
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.updateTask(widget.taskModel.sId!, dropdownValue));
+    NetworkResponse response = await networkCaller.getRequest(Urls.updateTask(widget.taskModel.sId!, dropdownValue));
     if(response.isSuccess){
       widget.onUpdate();
     }

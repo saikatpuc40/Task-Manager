@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:task_manager/app.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/ui/controllers/auth_controllers.dart';
@@ -24,6 +25,8 @@ import 'package:task_manager/ui/screens/auth/sign_in_screen.dart';
 /// ---------------------------------------------------------------------------
 class NetworkCaller {
 
+  AuthControllers authControllers = Get.find<AuthControllers>();
+
   /// Performs a GET request to the given [url].
   ///
   /// Returns a [NetworkResponse] that contains:
@@ -33,14 +36,14 @@ class NetworkCaller {
   /// Automatically:
   /// - Adds authentication token
   /// - Redirects user to login on 401 Unauthorized
-  static Future<NetworkResponse> getRequest(String url) async {
+  Future<NetworkResponse> getRequest(String url) async {
     try {
       debugPrint(url);
 
-      final Response response = await get(
+      final http.Response response = await http.get(
         Uri.parse(url),
         headers: {
-          'token': AuthControllers.accessToken,
+          'token': authControllers.accessToken,
         },
       );
 
@@ -93,7 +96,7 @@ class NetworkCaller {
   /// - Encodes request body as JSON
   /// - Checks API-level `status` field
   /// - Returns a consistent `NetworkResponse`
-  static Future<NetworkResponse> postRequest(
+  Future<NetworkResponse> postRequest(
       String url, {
         Map<String, dynamic>? body,
       }) async {
@@ -101,12 +104,12 @@ class NetworkCaller {
       debugPrint(url);
       debugPrint(body.toString());
 
-      final Response response = await post(
+      final http.Response response = await http.post(
         Uri.parse(url),
         body: jsonEncode(body),
         headers: {
           'Content-Type': 'application/json',
-          'token': AuthControllers.accessToken,
+          'token': authControllers.accessToken,
         },
       );
 
@@ -143,8 +146,8 @@ class NetworkCaller {
   ///
   /// Called automatically when API returns HTTP 401.
   /// This ensures secure logout across the entire app.
-  static Future<void> _redirectToLogin() async {
-    await AuthControllers.clearAllData();
+  Future<void> _redirectToLogin() async {
+    await authControllers.clearAllData();
 
     Navigator.pushAndRemoveUntil(
       TaskManagerApp.navigatorKey.currentContext!,

@@ -1,11 +1,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/login_model.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/data/utilities/urls.dart';
-import 'package:task_manager/ui/controllers/auth_controllers.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/sign_in_controllers.dart';
 import 'package:task_manager/ui/screens/auth/email_verification_screen.dart';
 import 'package:task_manager/ui/screens/auth/sign_up_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
@@ -27,8 +24,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _SignInApiInProgress = false;
   bool _showPassword = false;
+  final SignInControllers signInControllers = Get.find<SignInControllers>();
 
 
   @override
@@ -90,16 +87,20 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      Visibility(
-                        visible: _SignInApiInProgress==false,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: ElevatedButton(
-                          onPressed:  _onTapArrowIconButton,
-                          child:Icon(Icons.arrow_circle_right_outlined),
+                      GetBuilder<SignInControllers>(
+                        builder: (_) {
+                          return Visibility(
+                            visible: signInControllers.signInApiInProgress==false,
+                            replacement: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            child: ElevatedButton(
+                              onPressed:  _onTapArrowIconButton,
+                              child:Icon(Icons.arrow_circle_right_outlined),
 
-                        ),
+                            ),
+                          );
+                        }
                       ),
 
                       const SizedBox(height: 34,),
@@ -146,49 +147,22 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _onTapArrowIconButton(){
+  Future<void> _onTapArrowIconButton() async {
     if(_formKey.currentState!.validate()){
-      _signIn();
+      final bool result = await signInControllers.signIn(
+          _emailTEController.text.trim(),
+          _passwordTEController.text,
+      );
+      if(result){
+        Get.offAll(()=>const MainBottomNavScreen());
+      }
+      else{
+        if(mounted){
+          showSnackBarMessage(context, signInControllers.errorMessage);
+        }
+      }
     }
   }
-
-  Future<void> _signIn() async {
-    _SignInApiInProgress = true;
-    if(mounted){
-      setState(() {});
-    }
-    Map<String,dynamic> requestData={
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-
-    final NetworkResponse response = await NetworkCaller.postRequest(Urls.login,body: requestData);
-    _SignInApiInProgress = false;
-    if(mounted){
-      setState(() {});
-    }
-    if(response.isSuccess){
-      LoginModel loginModel = LoginModel.fromJson(response.responseData);
-      await AuthControllers.saveUserAccessToken(loginModel.token!);
-      await AuthControllers.saveUserData(loginModel.userModel!);
-      if(mounted){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context)=>MainBottomNavScreen(),
-          ),
-        );
-
-      }
-    }else{
-      if(mounted){
-        showSnackBarMessage(context, response.errorMessage??'Invalid Credentials!');
-      }
-
-    }
-
-  }
-
   void _onTapSignUpButton(){
     Navigator.push(context,
       MaterialPageRoute(
