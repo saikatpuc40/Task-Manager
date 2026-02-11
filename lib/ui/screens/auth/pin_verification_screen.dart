@@ -1,6 +1,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
@@ -20,6 +21,7 @@ class PinVerificationScreen extends StatefulWidget {
 }
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
+  NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool _pinVerificationScreenInProgress = false;
 
@@ -134,7 +136,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
     if(mounted){
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.verifyPinTask(widget.email, _verificationPinTEController.text.trim()));
+    NetworkResponse response = await networkCaller.getRequest(Urls.verifyPinTask(widget.email, _verificationPinTEController.text.trim()));
     _pinVerificationScreenInProgress = false;
     if(mounted){
       setState(() {});

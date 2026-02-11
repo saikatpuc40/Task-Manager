@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/models/user_model.dart';
@@ -20,6 +21,9 @@ class UpdateProfileScreen extends StatefulWidget {
 }
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+
+  NetworkCaller networkCaller = Get.find<NetworkCaller>();
+  AuthControllers authControllers = Get.find<AuthControllers>();
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _lastNameTEController = TextEditingController();
@@ -33,7 +37,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final userData = AuthControllers.userData!;
+    final userData = authControllers.userData!;
     _emailTEController.text =userData.email ?? " ";
     _firstNameTEController.text =userData.firstName ?? " ";
     _lastNameTEController.text =userData.lastName ?? " ";
@@ -128,59 +132,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
 
-  Future<void> _updateProfile() async {
-    _updateProfileInProgress = true;
-    String encodePhoto = AuthControllers.userData?.photo?? '';
-    if(mounted){
-      setState(() {});
-    }
-    Map<String,dynamic> requestBody = {
-      "email" : _emailTEController.text,
-      "firstName" : _firstNameTEController.text.trim(),
-      "lastName" : _lastNameTEController.text.trim(),
-      "mobile" : _mobileTEController.text.trim(),
-    };
 
-    if(_passwordTEController.text.trim().isNotEmpty){
-      requestBody['password'] = _passwordTEController.text;
-    }
-    if(_selectedImage!=null){
-      File file = File(_selectedImage!.path);
-      encodePhoto = base64Encode(file.readAsBytesSync());
-      requestBody['photo'] = encodePhoto;
-    }
-
-    NetworkResponse response = await NetworkCaller.postRequest(Urls.profileUpdate,body: requestBody);
-
-    if(response.isSuccess && response.responseData['status'] == 'success'){
-      UserModel userModel = UserModel(
-        email: _emailTEController.text,
-        photo: encodePhoto,
-        firstName: _firstNameTEController.text.trim(),
-        lastName: _lastNameTEController.text.trim(),
-        mobile: _mobileTEController.text.trim(),
-      );
-
-      await AuthControllers.saveUserData(userModel);
-      if(mounted){
-        showSnackBarMessage(context, 'Profile Update Successfully');
-      }
-
-    }else{
-      if(mounted){
-        showSnackBarMessage(context, response.errorMessage?? 'Profile Update Failed!');
-      }
-    }
-    _updateProfileInProgress = false;
-    if(mounted){
-      setState(() {});
-    }
-
-
-
-
-
-  }
 
 
   Widget _buildPhotoPickerWidget() {
@@ -228,15 +180,5 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
-  Future<void> _pickProfileImage() async {
-    final imagePicker = ImagePicker();
-    final XFile? result = await imagePicker.pickImage(source: ImageSource.gallery);
-    if(result!=null){
-      _selectedImage = result;
-      if(mounted){
-        setState(() {});
-      }
-    }
 
-  }
 }

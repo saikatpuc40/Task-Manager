@@ -1,9 +1,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/data/utilities/urls.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/email_verification_controller.dart';
 import 'package:task_manager/ui/screens/auth/pin_verification_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
@@ -18,10 +17,10 @@ class EmailVerificationScreen extends StatefulWidget {
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
+
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _emailVerificationScreenInProgress = false;
+  EmailVerificationController emailVerificationController = Get.find<EmailVerificationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +61,18 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Visibility(
-                        visible: _emailVerificationScreenInProgress == false,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: ElevatedButton(onPressed: _onTapConfirmEmailButton,
-                            child:Icon(Icons.arrow_circle_right_outlined),
-                        ),
+                      GetBuilder<EmailVerificationController>(
+                        builder: (_) {
+                          return Visibility(
+                            visible: emailVerificationController.emailVerificationScreenInProgress == false,
+                            replacement: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            child: ElevatedButton(onPressed: _onTapConfirmEmailButton,
+                                child:Icon(Icons.arrow_circle_right_outlined),
+                            ),
+                          );
+                        }
                       ),
 
                       const SizedBox(height: 34,),
@@ -112,39 +115,29 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   }
 
-  void _onTapConfirmEmailButton(){
+  Future<void> _onTapConfirmEmailButton() async {
     if(_formKey.currentState!.validate()){
-      _emailVerification();
-    }
-  }
-  Future<void> _emailVerification() async {
-    _emailVerificationScreenInProgress = true;
-    if(mounted){
-      setState(() {});
-    }
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.emailVerificationTask(_emailTEController.text.trim()));
-    _emailVerificationScreenInProgress = false;
-    if(mounted){
-      setState(() {});
-    }
-    if(response.isSuccess){
-      _clearTextFields();
-      if(mounted){
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) => PinVerificationScreen(
-              email:_emailTEController.text.trim()
-          ),
-        ),);
+      final bool result = await emailVerificationController.emailVerification(
+          _emailTEController.text.trim(),
+      );
+      if(result){
+        _clearTextFields();
+        if(mounted){
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) => PinVerificationScreen(
+                email:_emailTEController.text.trim()
+            ),
+          ),);
+        }
+      }
+      else{
+        if(mounted){
+          showSnackBarMessage(context, emailVerificationController.errorMessage);
+        }
       }
     }
-    else{
-      if(mounted){
-        showSnackBarMessage(context, response.errorMessage?? 'Email Verification Failed!');
-      }
-    }
-
-
   }
+
 
   void _clearTextFields(){
     _emailTEController.clear();
