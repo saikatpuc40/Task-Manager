@@ -5,6 +5,7 @@ import 'package:task_manager/ui/controllers/auth_controllers.dart';
 import 'package:task_manager/ui/controllers/email_verification_controller.dart';
 import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/controllers/sign_in_controllers.dart';
+import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 
 class ControllerBinder extends Bindings{
   @override
@@ -15,6 +16,7 @@ class ControllerBinder extends Bindings{
     Get.lazyPut(()=>NetworkCaller());
     Get.lazyPut(()=>EmailVerificationController());
     Get.lazyPut(()=>AddNewTaskController());
+    Get.lazyPut(()=>UpdateProfileController());
   }
 
 }

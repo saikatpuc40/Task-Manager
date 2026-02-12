@@ -16,13 +16,17 @@ AppBar profileAppBar(context,[bool isUpdateProfile = false]) {
     backgroundColor: AppColors.themeColor,
     leading:  Padding(
       padding: const EdgeInsets.all(8.0),
-      child: CircleAvatar(
-        //child: NetworkCachedImage(url: ''),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Image.memory(base64Decode(authControllers.userData?.photo??''),
-          ),
-        ),
+      child: GetBuilder<AuthControllers>(
+        builder: (_) {
+          return CircleAvatar(
+            //child: NetworkCachedImage(url: ''),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Image.memory(base64Decode(authControllers.userData?.photo??''),
+              ),
+            ),
+          );
+        }
       ),
     ),
     title: GestureDetector(
@@ -34,22 +38,26 @@ AppBar profileAppBar(context,[bool isUpdateProfile = false]) {
         )
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(authControllers.userData?.fullName ?? '',
-            style: TextStyle(
-                fontSize: 16,
-                color: Colors.white
-            ),
-          ),
-          Text(authControllers.userData?.email ?? '',
-            style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w500
-            ),)
-        ],
+      child: GetBuilder<AuthControllers>(
+        builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(authControllers.userData?.fullName ?? '',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white
+                ),
+              ),
+              Text(authControllers.userData?.email ?? '',
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500
+                ),)
+            ],
+          );
+        }
       ),
     ),
     actions: [

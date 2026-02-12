@@ -18,7 +18,7 @@ class AuthControllers extends GetxController{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(_accessTokenKey, token);
     accessToken = token;
-    // update();
+    update();
   }
 
   Future<String?> getUserAccessToken() async {
@@ -30,7 +30,7 @@ class AuthControllers extends GetxController{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(_userDataKey, jsonEncode(user.toJson()));
     userData = user;
-    // update();
+    update();
   }
 
   Future<UserModel?> getUserData() async{
@@ -38,7 +38,7 @@ class AuthControllers extends GetxController{
     String? userData = sharedPreferences.getString(_userDataKey);
     if(userData == null) return null;
     UserModel userModel = UserModel.fromJson(jsonDecode(userData));
-    // update();
+    update();
     return userModel;
   }
 
@@ -49,7 +49,7 @@ class AuthControllers extends GetxController{
 
     accessToken = '';
     userData = null;
-    // update();
+    update();
   }
 
   Future<bool> checkAuthState() async{
@@ -57,7 +57,7 @@ class AuthControllers extends GetxController{
     if(token == null) return false;
     accessToken = token;
     userData = await getUserData();
-    // update();
+    update();
 
     return true;
 
