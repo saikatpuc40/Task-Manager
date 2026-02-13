@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_item_controller.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/task_summary_card.dart';
@@ -18,6 +19,7 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   NewTaskController newTaskController = Get.find();
+  TaskItemController taskItemController = Get.find<TaskItemController>();
 
   @override
   void initState() {
@@ -51,19 +53,23 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                     replacement: const Center(
                       child: CircularProgressIndicator(),
                     ),
-                    child: ListView.builder(
-                        itemCount: newTaskController.newTaskList.length,
-                        itemBuilder: (context, index) {
-                          return TaskItem(
-                            taskModel: newTaskController.newTaskList[index],
-                            onUpdate: (){
-                              newTaskController.getNewTask();
-                              newTaskController.getTaskStatus();
+                    child: GetBuilder<TaskItemController>(
+                      builder: (taskItemController) {
+                        return ListView.builder(
+                            itemCount: newTaskController.newTaskList.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                taskModel: newTaskController.newTaskList[index],
+                                onUpdate: (){
+                                  newTaskController.getNewTask();
+                                  newTaskController.getTaskStatus();
+                                },
+                              );
+
                             },
                           );
-
-                        },
-                      ),
+                      }
+                    ),
                                 );
                   }
                 ),

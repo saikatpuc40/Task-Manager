@@ -1,9 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/data/utilities/urls.dart';
+import 'package:task_manager/ui/controllers/sign_up_controller.dart';
+import 'package:task_manager/ui/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/utilities/app_constants.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
@@ -39,7 +38,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
 
-  NetworkCaller networkCaller = Get.find<NetworkCaller>();
+  SignUpController signUpController = Get.find<SignUpController>();
   // -------------------------------------------------------------------------
   // Text Controllers
   // -------------------------------------------------------------------------
@@ -58,7 +57,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // UI State
   // -------------------------------------------------------------------------
   bool _showPassword = false;
-  bool _registrationInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -176,19 +174,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 16),
 
                     // Registration Button or Loading Indicator
-                    Visibility(
-                      visible: !_registrationInProgress,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _registerUser();
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
-                      ),
+                    GetBuilder<SignUpController>(
+                      builder: (_) {
+                        return Visibility(
+                          visible: signUpController.registrationInProgress == false,
+                          replacement: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _registerUser();
+                              },
+                            child: const Icon(Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }
                     ),
 
                     const SizedBox(height: 34),
@@ -224,43 +224,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  /// -------------------------------------------------------------------------
-  /// _registerUser
-  /// -------------------------------------------------------------------------
-  /// Collects input data and sends a POST request to register the user.
-  /// Uses [NetworkCaller.postRequest] to handle API communication.
-  /// Displays success or error messages using [showSnackBarMessage].
-  /// Updates [_registrationInProgress] to show loading indicator.
-  /// -------------------------------------------------------------------------
   Future<void> _registerUser() async {
-    _registrationInProgress = true;
-    if (mounted) setState(() {});
-
-    Map<String, dynamic> requestInput = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text,
-      "photo": ""
-    };
-
-    NetworkResponse response =
-    await networkCaller.postRequest(Urls.registration, body: requestInput);
-
-    _registrationInProgress = false;
-    if (mounted) setState(() {});
-
-    if (response.isSuccess) {
+    if (_formKey.currentState!.validate()) {
+      final bool result = await signUpController.registerUser(
+          _emailTEController.text.trim(),
+          _firstNameTEController.text.trim(),
+          _lastNameTEController.text.trim(),
+          _mobileTEController.text.trim(),
+          _passwordTEController.text
+      );
       _clearTextFields();
-      if (mounted) showSnackBarMessage(context, 'Registration Successful');
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-          context, response.errorMessage ?? 'Registration Failed! Try Again.');
+      if(result){
+        if(mounted){
+          showSnackBarMessage(context, "Registration Successful");
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()),);
+        }
       }
+      else{
+        if(mounted){
+          showSnackBarMessage(context, signUpController.errorMessage);
+        }
+      }
+
+
     }
   }
+
 
   /// Clears all text fields after successful registration
   void _clearTextFields() {

@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/models/user_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controllers.dart';
 import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
