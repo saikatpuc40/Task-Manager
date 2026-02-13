@@ -1,14 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/models/user_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controllers.dart';
+import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
 import 'package:task_manager/ui/widgets/profile_app_bar.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
@@ -31,8 +26,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   XFile? _selectedImage;
-
-  bool _updateProfileInProgress = false;
+  UpdateProfileController updateProfileController= Get.find<UpdateProfileController>();
 
   @override
   void initState() {
@@ -101,14 +95,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _updateProfileInProgress==false,
-                    replacement: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                      child: ElevatedButton(onPressed: (){
-                        _updateProfile();
-                      }, child: Icon(Icons.arrow_circle_right_outlined))),
+                  GetBuilder<UpdateProfileController>(
+                    builder: (_) {
+                      return Visibility(
+                        visible: updateProfileController.updateProfileInProgress==false,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                          child: ElevatedButton(onPressed: (){
+                            _updateProfile();
+                          }, child: Icon(Icons.arrow_circle_right_outlined)));
+                    }
+                  ),
                   const SizedBox(height: 16,)
                 ],
               ),
@@ -117,27 +115,28 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         ),
       ),
     );
-
-
-  }
-
-  @override
-  void dispose() {
-    _emailTEController.dispose();
-    _firstNameTEController.dispose();
-    _lastNameTEController.dispose();
-    _mobileTEController.dispose();
-    _passwordTEController.dispose();
-    super.dispose();
   }
 
 
+  Future<void> _updateProfile() async {
+    if(_formKey.currentState!.validate()){
+      final bool result = await updateProfileController.updateProfile(_emailTEController.text.trim(), _firstNameTEController.text.trim(), _lastNameTEController.text.trim(), _mobileTEController.text.trim(), _passwordTEController.text);
+      if(result){
+        if(mounted){
+          showSnackBarMessage(context, "Profile Updated Successfully");
+        }
+      }
+      else{
+        if(mounted){
+          showSnackBarMessage(context, updateProfileController.errorMessage);
+        }
+      }
+    }
 
-
-
+    }
   Widget _buildPhotoPickerWidget() {
     return GestureDetector(
-      onTap: _pickProfileImage,
+      onTap: updateProfileController.pickProfileImage,
       child: Container(
                 width: double.maxFinite,
                 height: 48,
@@ -178,6 +177,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
               ),
     );
+  }
+
+
+  @override
+  void dispose() {
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _mobileTEController.dispose();
+    _passwordTEController.dispose();
+    super.dispose();
   }
 
 

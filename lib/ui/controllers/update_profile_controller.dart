@@ -31,6 +31,7 @@ class UpdateProfileController extends GetxController{
   }
 
   Future<bool> updateProfile(String email, String firstName, String lastName, String mobile, String password) async {
+    bool isSuccess = false;
     _updateProfileInProgress = true;
     String encodePhoto = authControllers.userData?.photo?? '';
     update();
@@ -62,13 +63,13 @@ class UpdateProfileController extends GetxController{
       );
       await authControllers.saveUserData(userModel);
       update();
-      return true;
-
+      isSuccess = true;
     }else{
-      _updateProfileInProgress = false;
-      update();
-      return false;
+      _errorMessage = response.errorMessage?? 'Profile Update Failed!';
     }
+    _updateProfileInProgress = false;
+    update();
+    return isSuccess;
 
 
 
