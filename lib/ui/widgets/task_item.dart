@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/ui/controllers/task_item_controller.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 class TaskItem extends StatefulWidget {
@@ -20,10 +20,7 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
   NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
-  TaskItemController taskItemController = Get.find<TaskItemController>();
-
-  bool _updateTaskInProgress = false;
-
+  NewTaskController newTaskController = Get.find<NewTaskController>();
   String dropdownValue = '';
   List<String> statusList = ['New', 'In Progress', 'Completed', 'Cancelled'];
 
@@ -38,83 +35,78 @@ class _TaskItemState extends State<TaskItem> {
     return Card(
       color: Colors.white,
       elevation: 3,
-      child: GetBuilder<TaskItemController>(
-        builder: (_) {
-          return ListTile(
-            title: Text(widget.taskModel.title ?? ''),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListTile(
+        title: Text(widget.taskModel.title ?? ''),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.taskModel.description ?? ''),
+            Text('Date : ${widget.taskModel.createdDate}', style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600
+            ),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.taskModel.description ?? ''),
-                Text('Date : ${widget.taskModel.createdDate}', style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600
-                ),),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Chip(label: Text(widget.taskModel.status ?? "New",
+                  style: TextStyle(color: Colors.white),),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)
+                  ),
+                  backgroundColor: Colors.lightBlue,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                ),
+                ButtonBar(
                   children: [
-                    Chip(label: Text(widget.taskModel.status ?? "New",
-                      style: TextStyle(color: Colors.white),),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)
-                      ),
-                      backgroundColor: Colors.lightBlue,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    GetBuilder<NewTaskController>(
+                        builder: (_) {
+                          return Visibility(
+                            visible: newTaskController.deleteTaskInProgress == false,
+                            replacement: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            child: IconButton(onPressed: () {
+                              _deleteTask();
+                            }, icon: Icon(Icons.delete)),
+                          );
+                        }
                     ),
-                    ButtonBar(
-                      children: [
-                        GetBuilder<TaskItemController>(
-                            builder: (_) {
-                              return Visibility(
-                                visible: taskItemController.deleteTaskInProgress ==
-                                    false,
-                                replacement: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                                child: IconButton(onPressed: () {
-                                  _deleteTask();
-                                }, icon: Icon(Icons.delete)),
-                              );
-                            }
-                        ),
-                        PopupMenuButton<String>(
-                            icon: const Icon(Icons.edit),
-                            onSelected: (String selectedValue) {
-                              dropdownValue = selectedValue;
-                              debugPrint(dropdownValue);
-                              _updateTask();
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return statusList.map((String value) {
-                                return PopupMenuItem<String>(
-                                  value: value,
-                                  child: ListTile(
-                                      title: Text(value),
-                                      trailing: dropdownValue == value
-                                          ? const Icon(Icons.done)
-                                          : null
-                                  ),
-                                );
-                              }).toList();
-                            }
-                        ),
-                      ],
-
-                    )
+                    PopupMenuButton<String>(
+                        icon: const Icon(Icons.edit),
+                        onSelected: (String selectedValue) {
+                          dropdownValue = selectedValue;
+                          debugPrint(dropdownValue);
+                          _updateTask();
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return statusList.map((String value) {
+                            return PopupMenuItem<String>(
+                              value: value,
+                              child: ListTile(
+                                  title: Text(value),
+                                  trailing: dropdownValue == value
+                                      ? const Icon(Icons.done)
+                                      : null
+                              ),
+                            );
+                          }).toList();
+                        }
+                    ),
                   ],
 
                 )
               ],
 
-            ),
-          );
-        }
+            )
+          ],
+
+        ),
       ),
     );
   }
 
   Future<void> _deleteTask() async {
-    final bool result = await taskItemController.deleteTask(
+    final bool result = await newTaskController.deleteTask(
         widget.taskModel.sId!);
     if (result) {
 
@@ -122,22 +114,22 @@ class _TaskItemState extends State<TaskItem> {
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, taskItemController.errorMessageForDeleteTask);
+            context, newTaskController.errorMessageForDeleteTask);
       }
     }
   }
 
 
   Future<void> _updateTask() async {
-    final bool result = await taskItemController.updateTask(
+    final bool result = await newTaskController.updateTask(
         widget.taskModel.sId!, dropdownValue);
     if (result) {
-      widget.onUpdate();
+
     }
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, taskItemController.errorMessageForUpdateTask);
+            context, newTaskController.errorMessageForUpdateTask);
       }
     }
   }
