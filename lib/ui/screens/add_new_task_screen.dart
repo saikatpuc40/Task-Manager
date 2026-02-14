@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/add_new_task_controller.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/widgets/background_widget.dart';
 import 'package:task_manager/ui/widgets/profile_app_bar.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
@@ -14,7 +14,7 @@ class AddNewTaskScreen extends StatefulWidget {
 
 class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
-  AddNewTaskController addNewTaskController = Get.find<AddNewTaskController>();
+  NewTaskController newTaskController = Get.find<NewTaskController>();
 
   final TextEditingController _titleTEController = TextEditingController();
   final TextEditingController _descriptionTEController = TextEditingController();
@@ -64,10 +64,10 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   const SizedBox(height: 16,),
-                  GetBuilder<AddNewTaskController>(
+                  GetBuilder<NewTaskController>(
                     builder: (_) {
                       return Visibility(
-                        visible: addNewTaskController.addNewTaskInProgress==false,
+                        visible: newTaskController.addNewTaskInProgress==false,
                         replacement: const Center(
                           child: CircularProgressIndicator(),
                         ),
@@ -88,7 +88,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
  Future<void> _newTaskAddButton() async {
    if(_formKey.currentState!.validate()){
-     final bool result = await addNewTaskController.addNewTask(_titleTEController.text.trim(), _descriptionTEController.text.trim());
+     final bool result = await newTaskController.addNewTask(_titleTEController.text.trim(), _descriptionTEController.text.trim());
      if(result){
        _clearTextFields();
        if(mounted){
@@ -97,7 +97,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
      }
      else{
        if(mounted){
-         showSnackBarMessage(context, addNewTaskController.errorMessage);
+         showSnackBarMessage(context, newTaskController.errorMessageForAddNewTask);
        }
      }
 
