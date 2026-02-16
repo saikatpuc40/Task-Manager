@@ -52,19 +52,19 @@ class NewTaskController extends GetxController{
 
   bool _getCancelledTaskScreenInProgress = false;
   List<TaskModel> _cancelledTask = [];
-  String _errorMessage ='';
+  String _errorMessageForCancelledTask ='';
 
   bool get getCancelledTaskScreenInProgress => _getCancelledTaskScreenInProgress;
   List<TaskModel> get cancelledTask => _cancelledTask;
-  String get errorMessage => _errorMessage;
+  String get errorMessageForCancelledTask => _errorMessageForCancelledTask;
 
   bool _getInProgressTaskScreenInProgress = false;
   List<TaskModel> _inProgressTask = [];
-  String _errorMessage ='';
+  String _errorMessageForInProgressTask ='';
 
   bool get getInProgressTaskScreenInProgress => _getInProgressTaskScreenInProgress;
   List<TaskModel> get inProgressTask => _inProgressTask;
-  String get errorMessage => _errorMessage;
+  String get errorMessageForInProgressTask => _errorMessageForInProgressTask;
 
   Future<bool> getInProgressTask() async {
     bool isSuccess =false;
@@ -162,6 +162,9 @@ class NewTaskController extends GetxController{
     if(response.isSuccess){
       _taskList.removeWhere((task) => task.sId == taskId);
       await getTaskStatus();
+      await getCompletedTask();
+      await getInProgressTask();
+      await getcancelledTask();
       isSuccess = true;
     }
     else{
@@ -178,6 +181,11 @@ class NewTaskController extends GetxController{
     update();
     NetworkResponse response = await networkCaller.getRequest(Urls.updateTask(taskId, status));
     if(response.isSuccess){
+      await getNewTask();
+      await getTaskStatus();
+      await getCompletedTask();
+      await getInProgressTask();
+      await getcancelledTask();
       isSuccess = true;
     }
     else{

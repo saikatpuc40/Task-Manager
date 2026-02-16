@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/cancelled_task_controller.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
@@ -13,12 +13,13 @@ class CancelledTaskScreen extends StatefulWidget {
 
 class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
 
-  CancelledTaskController cancelledTaskController = Get.find<CancelledTaskController>();
+  NewTaskController newTaskController = Get.find<NewTaskController>();
+
 
   @override
   void initState() {
     super.initState();
-    cancelledTaskController.getcancelledTask();
+    newTaskController.getcancelledTask();
   }
 
   @override
@@ -26,25 +27,29 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          cancelledTaskController.getcancelledTask();
+          newTaskController.getcancelledTask();
         },
-        child: Visibility(
-          visible: cancelledTaskController.getCancelledTaskScreenInProgress == false,
-          replacement: const Center(
-            child: CircularProgressIndicator(),
-          ),
-          child: ListView.builder(
-            itemCount: cancelledTaskController.cancelledTask.length,
-            itemBuilder: (context, index) {
-              return TaskItem(
-                  taskModel: cancelledTaskController.cancelledTask[index],
-                  onUpdate: () {
-                    cancelledTaskController.getcancelledTask();
+        child: GetBuilder<NewTaskController>(
+          builder: (_) {
+            return Visibility(
+              visible: newTaskController.getCancelledTaskScreenInProgress == false,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: ListView.builder(
+                itemCount: newTaskController.cancelledTask.length,
+                itemBuilder: (context, index) {
+                  return TaskItem(
+                      taskModel: newTaskController.cancelledTask[index],
+                      onUpdate: () {
+                        newTaskController.getcancelledTask();
 
-              },);
+                  },);
 
-            },
-          ),
+                },
+              ),
+            );
+          }
         ),
       ),
     );
