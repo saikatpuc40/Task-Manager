@@ -1,8 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/ui/controllers/in_progress_task_controller.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class InProgressTaskScreen extends StatefulWidget {
@@ -14,35 +13,33 @@ class InProgressTaskScreen extends StatefulWidget {
 
 class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
 
-  NetworkCaller networkCaller = Get.find<NetworkCaller>();
-  InProgressTaskController inProgressTaskController = Get.find<InProgressTaskController>();
-
+  NewTaskController newTaskController = Get.find<NewTaskController>();
   @override
   void initState() {
     super.initState();
-    inProgressTaskController.getInProgressTask();
+    newTaskController.getInProgressTask();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          inProgressTaskController.getInProgressTask();
+          newTaskController.getInProgressTask();
         },
-        child: GetBuilder<InProgressTaskController>(
+        child: GetBuilder<NewTaskController>(
           builder: (_) {
             return Visibility(
-              visible: inProgressTaskController.getInProgressTaskScreenInProgress == false,
+              visible: newTaskController.getInProgressTaskScreenInProgress == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: inProgressTaskController.inProgressTask.length,
+                itemCount: newTaskController.inProgressTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: inProgressTaskController.inProgressTask[index],
+                      taskModel: newTaskController.inProgressTask[index],
                       onUpdate: () {
-                        inProgressTaskController.getInProgressTask();
+                        newTaskController.getInProgressTask();
                         },);
 
                 },

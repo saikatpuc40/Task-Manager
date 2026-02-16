@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/completed_task_controller.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
@@ -12,13 +12,12 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
-
-  CompletedTaskController completedTaskController = Get.find<CompletedTaskController>();
+  NewTaskController newTaskController = Get.find<NewTaskController>();
 
   @override
   void initState() {
     super.initState();
-    completedTaskController.getCompletedTask();
+    newTaskController.getCompletedTask();
   }
 
   @override
@@ -26,22 +25,22 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-             completedTaskController.getCompletedTask();
+             newTaskController.getCompletedTask();
           },
-        child: GetBuilder<CompletedTaskController>(
+        child: GetBuilder<NewTaskController>(
           builder: (_) {
             return Visibility(
-              visible: completedTaskController.getCompletedTaskScreenInProgress==false,
+              visible: newTaskController.getCompletedTaskScreenInProgress==false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: completedTaskController.completedTask.length,
+                itemCount: newTaskController.completedTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: completedTaskController.completedTask[index],
+                      taskModel: newTaskController.completedTask[index],
                       onUpdate: () {
-                        completedTaskController.getCompletedTask();
+                        newTaskController.getCompletedTask();
                   },
 
                   );
