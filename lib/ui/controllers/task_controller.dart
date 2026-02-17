@@ -7,7 +7,7 @@ import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/utilities/urls.dart';
 
-class NewTaskController extends GetxController{
+class TaskController extends GetxController{
   NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool get isLoading => _getNewTaskScreenInProgress||_getTaskStatusSectionInProgress;

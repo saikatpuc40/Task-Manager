@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
-import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 class TaskItem extends StatefulWidget {
@@ -20,7 +20,7 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
   NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
-  NewTaskController newTaskController = Get.find<NewTaskController>();
+  TaskController taskController = Get.find<TaskController>();
   String dropdownValue = '';
   List<String> statusList = ['New', 'In Progress', 'Completed', 'Cancelled'];
 
@@ -58,10 +58,10 @@ class _TaskItemState extends State<TaskItem> {
                 ),
                 ButtonBar(
                   children: [
-                    GetBuilder<NewTaskController>(
+                    GetBuilder<TaskController>(
                         builder: (_) {
                           return Visibility(
-                            visible: newTaskController.deleteTaskInProgress == false,
+                            visible: taskController.deleteTaskInProgress == false,
                             replacement: Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -106,7 +106,7 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Future<void> _deleteTask() async {
-    final bool result = await newTaskController.deleteTask(
+    final bool result = await taskController.deleteTask(
         widget.taskModel.sId!);
     if (result) {
 
@@ -114,14 +114,14 @@ class _TaskItemState extends State<TaskItem> {
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, newTaskController.errorMessageForDeleteTask);
+            context, taskController.errorMessageForDeleteTask);
       }
     }
   }
 
 
   Future<void> _updateTask() async {
-    final bool result = await newTaskController.updateTask(
+    final bool result = await taskController.updateTask(
         widget.taskModel.sId!, dropdownValue);
     if (result) {
 
@@ -129,7 +129,7 @@ class _TaskItemState extends State<TaskItem> {
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, newTaskController.errorMessageForUpdateTask);
+            context, taskController.errorMessageForUpdateTask);
       }
     }
   }

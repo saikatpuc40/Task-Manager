@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
@@ -13,13 +13,13 @@ class CancelledTaskScreen extends StatefulWidget {
 
 class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
 
-  NewTaskController newTaskController = Get.find<NewTaskController>();
+  TaskController taskController = Get.find<TaskController>();
 
 
   @override
   void initState() {
     super.initState();
-    newTaskController.getcancelledTask();
+    taskController.getcancelledTask();
   }
 
   @override
@@ -27,22 +27,22 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          newTaskController.getcancelledTask();
+          taskController.getcancelledTask();
         },
-        child: GetBuilder<NewTaskController>(
+        child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: newTaskController.getCancelledTaskScreenInProgress == false,
+              visible: taskController.getCancelledTaskScreenInProgress == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: newTaskController.cancelledTask.length,
+                itemCount: taskController.cancelledTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: newTaskController.cancelledTask[index],
+                      taskModel: taskController.cancelledTask[index],
                       onUpdate: () {
-                        newTaskController.getcancelledTask();
+                        taskController.getcancelledTask();
 
                   },);
 

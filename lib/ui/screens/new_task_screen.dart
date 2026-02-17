@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/task_summary_card.dart';
@@ -17,13 +17,13 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  NewTaskController newTaskController = Get.find();
+  TaskController taskController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    newTaskController.getNewTask();
-    newTaskController.getTaskStatus();
+    taskController.getNewTask();
+    taskController.getTaskStatus();
   }
 
 
@@ -38,26 +38,26 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             _buildSummarySection(),
             const SizedBox(height: 8,),
             Expanded(
-              child: GetBuilder<NewTaskController>(
+              child: GetBuilder<TaskController>(
                 builder: (_) {
-                  if(newTaskController.isLoading){
+                  if(taskController.isLoading){
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
                   return RefreshIndicator(
                     onRefresh: () async {
-                      newTaskController.getNewTask();
-                      newTaskController.getTaskStatus();
+                      taskController.getNewTask();
+                      taskController.getTaskStatus();
                     },
                       child: ListView.builder(
-                                itemCount: newTaskController.newTaskList.length,
+                                itemCount: taskController.newTaskList.length,
                                 itemBuilder: (context, index) {
                                   return TaskItem(
-                                    taskModel: newTaskController.newTaskList[index],
+                                    taskModel: taskController.newTaskList[index],
                                     onUpdate: () {
-                                      newTaskController.getNewTask();
-                                      newTaskController.getTaskStatus();
+                                      taskController.getNewTask();
+                                      taskController.getTaskStatus();
                                     },
                                   );
                                 },
@@ -90,12 +90,12 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Widget _buildSummarySection() {
-    return GetBuilder<NewTaskController>(
+    return GetBuilder<TaskController>(
         builder: (_) {
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-                children: newTaskController.taskCountByStatus.map((e) {
+                children: taskController.taskCountByStatus.map((e) {
                   return TaskSummaryCard(
                     title: e.sId ?? " UnKnown ".toLowerCase(),
                     count: e.sum.toString(),
