@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class InProgressTaskScreen extends StatefulWidget {
@@ -13,33 +13,33 @@ class InProgressTaskScreen extends StatefulWidget {
 
 class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
 
-  NewTaskController newTaskController = Get.find<NewTaskController>();
+  TaskController taskController = Get.find<TaskController>();
   @override
   void initState() {
     super.initState();
-    newTaskController.getInProgressTask();
+    taskController.getInProgressTask();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          newTaskController.getInProgressTask();
+          taskController.getInProgressTask();
         },
-        child: GetBuilder<NewTaskController>(
+        child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: newTaskController.getInProgressTaskScreenInProgress == false,
+              visible: taskController.getInProgressTaskScreenInProgress == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: newTaskController.inProgressTask.length,
+                itemCount: taskController.inProgressTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: newTaskController.inProgressTask[index],
+                      taskModel: taskController.inProgressTask[index],
                       onUpdate: () {
-                        newTaskController.getInProgressTask();
+                        taskController.getInProgressTask();
                         },);
 
                 },

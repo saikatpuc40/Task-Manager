@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
@@ -12,12 +12,12 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
-  NewTaskController newTaskController = Get.find<NewTaskController>();
+  TaskController taskController = Get.find<TaskController>();
 
   @override
   void initState() {
     super.initState();
-    newTaskController.getCompletedTask();
+    taskController.getCompletedTask();
   }
 
   @override
@@ -25,22 +25,22 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-             newTaskController.getCompletedTask();
+             taskController.getCompletedTask();
           },
-        child: GetBuilder<NewTaskController>(
+        child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: newTaskController.getCompletedTaskScreenInProgress==false,
+              visible: taskController.getCompletedTaskScreenInProgress==false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: newTaskController.completedTask.length,
+                itemCount: taskController.completedTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: newTaskController.completedTask[index],
+                      taskModel: taskController.completedTask[index],
                       onUpdate: () {
-                        newTaskController.getCompletedTask();
+                        taskController.getCompletedTask();
                   },
 
                   );
