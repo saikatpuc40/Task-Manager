@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
@@ -17,30 +18,31 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
   @override
   void initState() {
     super.initState();
-    taskController.getCompletedTask();
+    taskController.fetchTasks("Completed", Urls.completedTask);
   }
 
   @override
   Widget build(BuildContext context) {
+    final completedTask = taskController.taskMap["Completed"]??[];
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-             taskController.getCompletedTask();
+             taskController.fetchTasks("Completed",Urls.completedTask);
           },
         child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: taskController.getCompletedTaskScreenInProgress==false,
+              visible: taskController.isLoading == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: taskController.completedTask.length,
+                itemCount: completedTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: taskController.completedTask[index],
+                      taskModel:completedTask[index],
                       onUpdate: () {
-                        taskController.getCompletedTask();
+                        taskController.fetchTasks("Completed",Urls.completedTask);
                   },
 
                   );

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
@@ -17,29 +18,30 @@ class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
   @override
   void initState() {
     super.initState();
-    taskController.getInProgressTask();
+    taskController.fetchTasks("In Progress", Urls.inProgressTask);
   }
   @override
   Widget build(BuildContext context) {
+    final inProgressTask = taskController.taskMap["In Progress"]??[];
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          taskController.getInProgressTask();
+          taskController.fetchTasks("In Progress", Urls.inProgressTask);
         },
         child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: taskController.getInProgressTaskScreenInProgress == false,
+              visible: taskController.isLoading == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: taskController.inProgressTask.length,
+                itemCount: inProgressTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: taskController.inProgressTask[index],
+                      taskModel: inProgressTask[index],
                       onUpdate: () {
-                        taskController.getInProgressTask();
+                        taskController.fetchTasks("In Progress", Urls.inProgressTask);
                         },);
 
                 },

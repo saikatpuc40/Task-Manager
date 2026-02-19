@@ -67,7 +67,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   GetBuilder<TaskController>(
                     builder: (_) {
                       return Visibility(
-                        visible: taskController.addNewTaskInProgress==false,
+                        visible: taskController.isLoading==false,
                         replacement: const Center(
                           child: CircularProgressIndicator(),
                         ),
@@ -88,7 +88,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
  Future<void> _newTaskAddButton() async {
    if(_formKey.currentState!.validate()){
-     final bool result = await taskController.addNewTask(_titleTEController.text.trim(), _descriptionTEController.text.trim());
+     final bool result = await taskController.addTask(_titleTEController.text.trim(), _descriptionTEController.text.trim());
      if(result){
        _clearTextFields();
        if(mounted){
@@ -97,7 +97,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
      }
      else{
        if(mounted){
-         showSnackBarMessage(context, taskController.errorMessageForAddNewTask);
+         showSnackBarMessage(context, taskController.errorMessage??"Task Add Failed!");
        }
      }
 

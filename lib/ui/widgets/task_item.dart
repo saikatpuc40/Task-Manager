@@ -61,7 +61,7 @@ class _TaskItemState extends State<TaskItem> {
                     GetBuilder<TaskController>(
                         builder: (_) {
                           return Visibility(
-                            visible: taskController.deleteTaskInProgress == false,
+                            visible: taskController.isLoading == false,
                             replacement: Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -107,29 +107,29 @@ class _TaskItemState extends State<TaskItem> {
 
   Future<void> _deleteTask() async {
     final bool result = await taskController.deleteTask(
-        widget.taskModel.sId!);
+        widget.taskModel.sId!, widget.taskModel.status!);
     if (result) {
 
     }
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, taskController.errorMessageForDeleteTask);
+            context, taskController.errorMessage??'Task Delete Failed!');
       }
     }
   }
 
 
   Future<void> _updateTask() async {
-    final bool result = await taskController.updateTask(
-        widget.taskModel.sId!, dropdownValue);
+    final bool result = await taskController.updateTaskStatus(
+        widget.taskModel.sId!,widget.taskModel.status!,dropdownValue);
     if (result) {
 
     }
     else {
       if (mounted) {
         showSnackBarMessage(
-            context, taskController.errorMessageForUpdateTask);
+            context, taskController.errorMessage??'Task Update Failed!');
       }
     }
   }
