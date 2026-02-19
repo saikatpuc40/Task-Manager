@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
@@ -19,30 +20,32 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   @override
   void initState() {
     super.initState();
-    taskController.getcancelledTask();
+    taskController.fetchTasks("Cancelled", Urls.cancelledTask);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final cancelledTask = taskController.taskMap["Cancelled"]??[];
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
-          taskController.getcancelledTask();
+          taskController.fetchTasks("Cancelled", Urls.cancelledTask);
         },
         child: GetBuilder<TaskController>(
           builder: (_) {
             return Visibility(
-              visible: taskController.getCancelledTaskScreenInProgress == false,
+              visible: taskController.isLoading == false,
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
               child: ListView.builder(
-                itemCount: taskController.cancelledTask.length,
+                itemCount: cancelledTask.length,
                 itemBuilder: (context, index) {
                   return TaskItem(
-                      taskModel: taskController.cancelledTask[index],
+                      taskModel: cancelledTask[index],
                       onUpdate: () {
-                        taskController.getcancelledTask();
+                        taskController.fetchTasks("Cancelled", Urls.cancelledTask);
 
                   },);
 

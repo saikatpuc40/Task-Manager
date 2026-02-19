@@ -7,230 +7,166 @@ import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/utilities/urls.dart';
 
-class TaskController extends GetxController{
+class TaskController extends GetxController {
   NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
-  bool get isLoading => _getNewTaskScreenInProgress||_getTaskStatusSectionInProgress;
+  bool _isLoading = false;
+  String? _errorMessage;
 
-  bool _getNewTaskScreenInProgress = false;
-  bool _getTaskStatusSectionInProgress = false;
-  List<TaskModel> _taskList = [];
-  List<TaskCountByStatus> _taskCountByStatus = [];
-  String _errorMessage = '';
-  String _errorMessageForTaskStatus = '';
+  bool get isLoading => _isLoading;
 
-  List<TaskModel> get newTaskList => _taskList;
-  String get errorMessage => _errorMessage;
-  List<TaskCountByStatus> get taskCountByStatus => _taskCountByStatus;
-  String get errorMessageForTaskStatus => _errorMessageForTaskStatus;
+  String? get errorMessage => _errorMessage;
 
-  bool _deleteTaskInProgress =false;
-  String _errorMessageForDeleteTask = '';
-  String get errorMessageForDeleteTask => _errorMessageForDeleteTask;
-  bool get deleteTaskInProgress => _deleteTaskInProgress;
+  Map<String, List<TaskModel>> taskMap = {
+    "New": [],
+    "In Progress": [],
+    "Completed": [],
+    "Cancelled": []
+  };
+  List<TaskCountByStatus> taskCountByStatus = [];
 
-
-
-  bool _updateTaskInProgress =false;
-  String _errorMessageForUpdateTask = '';
-  String get errorMessageForUpdateTask => _errorMessageForUpdateTask;
-  bool get updateTaskInProgress => _updateTaskInProgress;
-
-
-  bool _addNewTaskInProgress = false;
-  String _errorMessageForAddNewTask = '';
-
-  bool get addNewTaskInProgress => _addNewTaskInProgress;
-  String get errorMessageForAddNewTask => _errorMessageForAddNewTask;
-  bool _getCompletedTaskScreenInProgress = false;
-  List<TaskModel> _completedTask = [];
-  String _errorMessageForCompletedTask ='';
-
-  List<TaskModel> get completedTask => _completedTask;
-  String get errorMessageForCompletedTask => _errorMessageForCompletedTask;
-  bool get getCompletedTaskScreenInProgress => _getCompletedTaskScreenInProgress;
-
-  bool _getCancelledTaskScreenInProgress = false;
-  List<TaskModel> _cancelledTask = [];
-  String _errorMessageForCancelledTask ='';
-
-  bool get getCancelledTaskScreenInProgress => _getCancelledTaskScreenInProgress;
-  List<TaskModel> get cancelledTask => _cancelledTask;
-  String get errorMessageForCancelledTask => _errorMessageForCancelledTask;
-
-  bool _getInProgressTaskScreenInProgress = false;
-  List<TaskModel> _inProgressTask = [];
-  String _errorMessageForInProgressTask ='';
-
-  bool get getInProgressTaskScreenInProgress => _getInProgressTaskScreenInProgress;
-  List<TaskModel> get inProgressTask => _inProgressTask;
-  String get errorMessageForInProgressTask => _errorMessageForInProgressTask;
-
-  Future<bool> getInProgressTask() async {
-    bool isSuccess =false;
-    _getInProgressTaskScreenInProgress = true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.inProgressTask);
-    if(response.isSuccess){
-      TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel.fromJson(response.responseData);
-      _inProgressTask = taskListWrapperModel.taskList??[];
-      isSuccess = true;
+  Future<void> fetchTasks(String status, String url) async {
+    try {
+      _isLoading = true;
+      update();
+      NetworkResponse response = await networkCaller.getRequest(url);
+      if (response.isSuccess) {
+        TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel
+            .fromJson(response.responseData);
+        taskMap[status] = taskListWrapperModel.taskList ?? [];
+      }
+      else {
+        _errorMessage = response.errorMessage ?? "Failed to load tasks";
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      update();
     }
-    else{
-      _errorMessage = response.errorMessage?? 'Get Completed Task Failed!';
-    }
-    _getInProgressTaskScreenInProgress = false;
-    update();
-    return isSuccess;
-
-
   }
 
-  Future<bool> getcancelledTask() async {
-    bool isSuccess =false;
-    _getCancelledTaskScreenInProgress = true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.cancelledTask);
-    if(response.isSuccess){
-      TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel.fromJson(response.responseData);
-      _cancelledTask = taskListWrapperModel.taskList??[];
-      isSuccess = true;
-    }
-    else{
-      _errorMessage=response.errorMessage?? 'Get Completed Task Failed!';
-    }
-    _getCancelledTaskScreenInProgress = false;
-    update();
-    return isSuccess;
 
-
+  Future<void> fetchTaskStatusCount() async {
+    try {
+      _isLoading = true;
+      update();
+      NetworkResponse response = await networkCaller.getRequest(
+          Urls.taskStatusCount);
+      if (response.isSuccess) {
+        TaskCountByStatusWrapperModel taskCountByStatusWrapperModel = TaskCountByStatusWrapperModel
+            .fromJson(response.responseData);
+        taskCountByStatus = taskCountByStatusWrapperModel.taskCount ?? [];
+      }
+      else {
+        _errorMessage = response.errorMessage ?? 'Failed to load Task Status!';
+      }
+    }
+    catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      update();
+    }
   }
 
-  Future<bool> getCompletedTask() async {
-    bool isSuccess =false;
-    _getCompletedTaskScreenInProgress = true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.completedTask);
-    if(response.isSuccess){
-      TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel.fromJson(response.responseData);
-      _completedTask = taskListWrapperModel.taskList??[];
-      isSuccess = true;
-    }
-    else{
-      _errorMessage= response.errorMessage?? 'Get Completed Task Failed!';
-    }
-    _getCompletedTaskScreenInProgress = false;
-    update();
-    return isSuccess;
+  Future<bool> addTask(String title, String description) async {
+    try {
+      _isLoading = true;
+      update();
 
+      NetworkResponse response =
+      await networkCaller.postRequest(
+        Urls.createTask,
+        body: {
+          "title": title,
+          "description": description,
+          "status": "New",
+        },
+      );
 
+      if (response.isSuccess) {
+        await fetchTasks("New", Urls.newTask);
+        await fetchTaskStatusCount();
+        return true;
+      } else {
+        _errorMessage =
+            response.errorMessage ?? "Add task failed";
+        return false;
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      update();
+    }
   }
 
-  Future<bool> addNewTask(String title, String description) async {
+  Future<bool> deleteTask(String id, String status) async {
+    try {
+      _isLoading = true;
+      update();
 
-    bool isSuccess = false;
-    _addNewTaskInProgress = true;
-    update();
-    Map<String,dynamic> requestData={
-      "title" : title,
-      "description" : description,
-      "status" : "New"
-    };
+      NetworkResponse response =
+      await networkCaller.getRequest(
+          Urls.deleteTask(id));
 
-    NetworkResponse response = await networkCaller.postRequest(Urls.createTask,body: requestData);
-    if(response.isSuccess){
-      // final taskData = response.responseData['data'];
-      // _taskList.add(TaskModel.fromJson(taskData));
-      await getNewTask();
-      await getTaskStatus();
-      isSuccess =true;
+      if (response.isSuccess) {
+        // Remove locally instead of refetch all
+        taskMap[status]?.removeWhere(
+                (task) => task.sId == id);
+
+        await fetchTaskStatusCount();
+        return true;
+      } else {
+        _errorMessage =
+            response.errorMessage ?? "Delete failed";
+        return false;
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      update();
     }
-    else{
-      _errorMessageForAddNewTask = response.errorMessage?? "Task Added Failed!.Try Again.";
-    }
-    _addNewTaskInProgress = false;
-    update();
-    return isSuccess;
-
   }
 
-  Future<bool> deleteTask(String taskId) async {
-    bool isSuccess = false;
-    _deleteTaskInProgress =true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.deleteTask(taskId));
-    if(response.isSuccess){
-      _taskList.removeWhere((task) => task.sId == taskId);
-      await getTaskStatus();
-      await getCompletedTask();
-      await getInProgressTask();
-      await getcancelledTask();
-      isSuccess = true;
+  Future<bool> updateTaskStatus(String id,
+      String oldStatus,
+      String newStatus) async {
+    try {
+      _isLoading = true;
+      update();
+
+      NetworkResponse response =
+      await networkCaller.getRequest(
+          Urls.updateTask(id, newStatus));
+
+      if (response.isSuccess) {
+        final task = taskMap[oldStatus]
+            ?.firstWhere((t) => t.sId == id);
+
+        if (task != null) {
+          taskMap[oldStatus]?.remove(task);
+          task.status = newStatus;
+          taskMap[newStatus]?.add(task);
+        }
+
+        await fetchTaskStatusCount();
+        return true;
+      } else {
+        _errorMessage =
+            response.errorMessage ?? "Update failed";
+        return false;
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      update();
     }
-    else{
-      _errorMessageForDeleteTask = response.errorMessage?? 'Task Delete Failed!';
-    }
-    _deleteTaskInProgress = false;
-    update();
-    return isSuccess;
   }
-
-  Future<bool> updateTask(String taskId, String status) async {
-    bool isSuccess = false;
-    _updateTaskInProgress =true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.updateTask(taskId, status));
-    if(response.isSuccess){
-      await getNewTask();
-      await getTaskStatus();
-      await getCompletedTask();
-      await getInProgressTask();
-      await getcancelledTask();
-      isSuccess = true;
-    }
-    else{
-      _errorMessageForUpdateTask =  response.errorMessage?? 'Task Completed Failed!';
-    }
-    _updateTaskInProgress = false;
-    update();
-    return isSuccess;
-  }
-
-  Future<bool> getNewTask() async {
-    bool isSuccess = false;
-    _getNewTaskScreenInProgress = true;
-
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.newTask);
-    if(response.isSuccess){
-      TaskListWrapperModel taskListWrapperModel = TaskListWrapperModel.fromJson(response.responseData);
-      _taskList = taskListWrapperModel.taskList??[];
-      isSuccess = true;
-    }
-    else{
-      _errorMessage = response.errorMessage?? 'Get New Task Failed!';
-    }
-    _getNewTaskScreenInProgress = false;
-    update();
-    return isSuccess;
-  }
-
-  Future<bool> getTaskStatus() async {
-    bool isSuccess = false;
-    _getTaskStatusSectionInProgress =true;
-    update();
-    NetworkResponse response = await networkCaller.getRequest(Urls.taskStatusCount);
-    if(response.isSuccess){
-      TaskCountByStatusWrapperModel taskCountByStatusWrapperModel = TaskCountByStatusWrapperModel.fromJson(response.responseData);
-      _taskCountByStatus = taskCountByStatusWrapperModel.taskCount??[];
-      isSuccess = true;
-    }
-    else{
-       _errorMessageForTaskStatus = response.errorMessage?? 'Get Task Status Failed!';
-    }
-    _getTaskStatusSectionInProgress = false;
-    update();
-    return isSuccess;
-  }
-
 }

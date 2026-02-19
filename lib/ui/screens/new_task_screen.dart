@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
@@ -17,13 +18,15 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  TaskController taskController = Get.find();
+  TaskController taskController = Get.find<TaskController>();
+
+
 
   @override
   void initState() {
     super.initState();
-    taskController.getNewTask();
-    taskController.getTaskStatus();
+    taskController.fetchTasks("New",Urls.newTask);
+    taskController.fetchTaskStatusCount();
   }
 
 
@@ -45,19 +48,20 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       child: CircularProgressIndicator(),
                     );
                   }
+                  final newTasks = taskController.taskMap["New"]??[];
                   return RefreshIndicator(
                     onRefresh: () async {
-                      taskController.getNewTask();
-                      taskController.getTaskStatus();
+                      taskController.fetchTasks("New", Urls.newTask);
+                      taskController.fetchTaskStatusCount();
                     },
                       child: ListView.builder(
-                                itemCount: taskController.newTaskList.length,
+                                itemCount: newTasks.length,
                                 itemBuilder: (context, index) {
                                   return TaskItem(
-                                    taskModel: taskController.newTaskList[index],
+                                    taskModel: newTasks[index],
                                     onUpdate: () {
-                                      taskController.getNewTask();
-                                      taskController.getTaskStatus();
+                                      taskController.fetchTasks("New", Urls.newTask);
+                                      taskController.fetchTaskStatusCount();
                                     },
                                   );
                                 },
