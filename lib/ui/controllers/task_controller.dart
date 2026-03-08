@@ -105,9 +105,6 @@ class TaskController extends GetxController {
 
   Future<bool> deleteTask(String id, String status) async {
     try {
-      _isLoading = true;
-      update();
-
       NetworkResponse response =
       await networkCaller.getRequest(
           Urls.deleteTask(id));
@@ -118,6 +115,7 @@ class TaskController extends GetxController {
                 (task) => task.sId == id);
 
         await fetchTaskStatusCount();
+        update();
         return true;
       } else {
         _errorMessage =
@@ -127,9 +125,6 @@ class TaskController extends GetxController {
     } catch (e) {
       _errorMessage = e.toString();
       return false;
-    } finally {
-      _isLoading = false;
-      update();
     }
   }
 
@@ -137,9 +132,6 @@ class TaskController extends GetxController {
       String oldStatus,
       String newStatus) async {
     try {
-      _isLoading = true;
-      update();
-
       NetworkResponse response =
       await networkCaller.getRequest(
           Urls.updateTask(id, newStatus));
@@ -155,6 +147,7 @@ class TaskController extends GetxController {
         }
 
         await fetchTaskStatusCount();
+        update();
         return true;
       } else {
         _errorMessage =
@@ -164,9 +157,6 @@ class TaskController extends GetxController {
     } catch (e) {
       _errorMessage = e.toString();
       return false;
-    } finally {
-      _isLoading = false;
-      update();
     }
   }
 }
