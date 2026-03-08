@@ -3,6 +3,7 @@ import 'package:task_manager/ui/screens/cancelled_task_screen.dart';
 import 'package:task_manager/ui/screens/completed_task_screen.dart';
 import 'package:task_manager/ui/screens/in_progress_task_screen.dart';
 import 'package:task_manager/ui/screens/new_task_screen.dart';
+import 'package:task_manager/ui/screens/settings_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 import 'package:task_manager/ui/widgets/profile_app_bar.dart';
 
@@ -20,6 +21,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     CompletedTaskScreen(),
     InProgressTaskScreen(),
     CancelledTaskScreen(),
+    SettingsScreen(),
  ];
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
              BottomNavigationBarItem(icon: Icon(Icons.done), label: "Completed"),
              BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: "In Progress"),
              BottomNavigationBarItem(icon: Icon(Icons.close), label: "Cancelled"),
+             BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
            ]
        ),
     );
