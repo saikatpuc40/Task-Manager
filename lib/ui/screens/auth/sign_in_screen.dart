@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       const SizedBox(height: 80),
                       Text(
-                          "Get Started With",
+                          "get_started_with".tr,
                           style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 24),
                       TextFormField(
@@ -51,14 +51,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          hintText: "Email"
+                          hintText: "email".tr
                         ),
                         validator: (String? value){
                           if(value?.trim().isEmpty??true){
-                            return 'Enter your Email';
+                            return 'enter_email'.tr;
                           }
                           if(AppConstants.emailRegExp.hasMatch(value!)==false){
-                            return 'Enter valid Email';
+                            return 'enter_valid_email'.tr;
                           }
                           return null;
                         },
@@ -69,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         obscureText: _showPassword == false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
-                            hintText: "Password",
+                            hintText: "password".tr,
                             suffixIcon: IconButton(
                                 onPressed: (){
                                   _showPassword=!_showPassword;
@@ -81,7 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         validator: (String? value){
                           if(value?.isEmpty??true){
-                            return 'Enter your password';
+                            return 'enter_password'.tr;
                           }
                           return null;
                         },
@@ -110,7 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             TextButton(onPressed: (){
                               _onTapForgotPasswordButton();
                             },
-                                child: Text("Forgot Password?")
+                                child: Text("forgot_password".tr)
                             ),
                             RichText(text: TextSpan(
                               style: TextStyle(
@@ -118,10 +118,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.4,
                               ),
-                              text:"Don't have an account? ",
+                              text:"don't_have_account".tr,
                               children: [
                                 TextSpan(
-                                  text: 'Sign up',
+                                  text: 'sign_up'.tr,
                                   style: const TextStyle(
                                     color: AppColors.themeColor
                                   ),

@@ -52,7 +52,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 48,),
-                  Text("Update Profile", style: Theme
+                  Text("update_profile".tr, style: Theme
                       .of(context)
                       .textTheme
                       .titleLarge),
@@ -62,7 +62,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   TextFormField(
                     controller: _emailTEController,
                     decoration: InputDecoration(
-                      hintText: "Email"
+                      hintText: "email".tr
                     ),
                     enabled: false,
                   ),
@@ -70,28 +70,28 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   TextFormField(
                     controller: _firstNameTEController,
                     decoration: InputDecoration(
-                        hintText: "First Name"
+                        hintText: "first_name".tr
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _lastNameTEController,
                     decoration: InputDecoration(
-                        hintText: "Last Name"
+                        hintText: "last_name".tr
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _mobileTEController,
                     decoration: InputDecoration(
-                        hintText: "Mobile"
+                        hintText: "mobile".tr
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _passwordTEController,
                     decoration: InputDecoration(
-                        hintText: "Password"
+                        hintText: "password".tr
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -123,7 +123,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final bool result = await updateProfileController.updateProfile(_emailTEController.text.trim(), _firstNameTEController.text.trim(), _lastNameTEController.text.trim(), _mobileTEController.text.trim(), _passwordTEController.text);
       if(result){
         if(mounted){
-          showSnackBarMessage(context, "Profile Updated Successfully");
+          showSnackBarMessage(context, "profile_update_success".tr);
         }
       }
       else{
@@ -158,7 +158,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         )
                       ),
                       alignment: Alignment.center,
-                      child: Text("Photo",style: TextStyle(
+                      child: Text("photo".tr,style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                         fontSize: 16
@@ -168,7 +168,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     const SizedBox( width: 16,),
                     Expanded(
                       child: Text(
-                        _selectedImage?.name ?? 'No Image Selected',
+                        _selectedImage?.name ?? 'no_image_selected',
                         maxLines: 1,
                         style: const TextStyle(overflow: TextOverflow.ellipsis),
                       ))

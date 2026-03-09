@@ -76,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     // Page Title
                     Text(
-                      "Join With Us",
+                      "join_with_us".tr,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 24),
@@ -85,15 +85,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: _emailTEController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: "Email",
+                      decoration:  InputDecoration(
+                        hintText: "email".tr,
                       ),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
-                          return 'Enter your Email';
+                          return 'enter_email'.tr;
                         }
                         if (!AppConstants.emailRegExp.hasMatch(value!)) {
-                          return 'Enter valid Email';
+                          return 'enter_valid_email'.tr;
                         }
                         return null;
                       },
@@ -103,12 +103,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // First Name Input
                     TextFormField(
                       controller: _firstNameTEController,
-                      decoration: const InputDecoration(
-                        hintText: "First Name",
+                      decoration: InputDecoration(
+                        hintText: "first_name".tr,
                       ),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
-                          return 'Enter your first name';
+                          return 'enter_your_first_name'.tr;
                         }
                         return null;
                       },
@@ -118,12 +118,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Last Name Input
                     TextFormField(
                       controller: _lastNameTEController,
-                      decoration: const InputDecoration(
-                        hintText: "Last Name",
+                      decoration: InputDecoration(
+                        hintText: "last_name".tr,
                       ),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
-                          return 'Enter your last name';
+                          return 'enter_your_last_name'.tr;
                         }
                         return null;
                       },
@@ -134,12 +134,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: _mobileTEController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: "Mobile",
+                      decoration: InputDecoration(
+                        hintText: "mobile".tr,
                       ),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
-                          return 'Enter your Mobile';
+                          return 'enter_mobile'.tr;
                         }
                         return null;
                       },
@@ -151,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: !_showPassword,
                       controller: _passwordTEController,
                       decoration: InputDecoration(
-                        hintText: "Password",
+                        hintText: "password".tr,
                         suffixIcon: IconButton(
                           onPressed: () {
                             _showPassword = !_showPassword;
@@ -166,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Enter your password';
+                          return 'enter_password'.tr;
                         }
                         return null;
                       },
@@ -202,10 +202,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
                           ),
-                          text: "Have account? ",
+                          text: "have_account".tr,
                           children: [
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'sign_in'.tr,
                               style: const TextStyle(color: AppColors.themeColor),
                               recognizer:
                               TapGestureRecognizer()..onTap = _onTapSignInButton,
@@ -236,7 +236,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _clearTextFields();
       if(result){
         if(mounted){
-          showSnackBarMessage(context, "Registration Successful");
+          showSnackBarMessage(context, "registration_success".tr);
           Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()),);
         }
       }
