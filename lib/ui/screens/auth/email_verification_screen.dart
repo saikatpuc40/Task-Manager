@@ -37,11 +37,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     children: [
                       const SizedBox(height: 80),
                       Text(
-                          "Your Email Address",
+                          "your_email_address".tr,
                           style: Theme.of(context).textTheme.titleLarge
                       ),
                       Text(
-                          "A 6 digit verification pin will send your email address",
+                          "email_pin_message".tr,
                           style: Theme.of(context).textTheme.titleSmall
                       ),
 
@@ -52,12 +52,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (String? value){
                           if(value?.trim().isEmpty??true){
-                            return 'Enter your Email';
+                            return 'enter_email'.tr;
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                          hintText: "Email"
+                          hintText: "email".tr
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -83,10 +83,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
                           ),
-                          text:"Have account? ",
+                          text:"have_account".tr,
                           children: [
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'sign_in'.tr,
                               style: const TextStyle(
                                 color: AppColors.themeColor
                               ),

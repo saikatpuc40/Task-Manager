@@ -39,11 +39,11 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     children: [
                       const SizedBox(height: 80),
                       Text(
-                          "Pin Verification",
+                          "pin_verification".tr,
                           style: Theme.of(context).textTheme.titleLarge
                       ),
                       Text(
-                          "A 6 digit verification pin has been send your email address",
+                          "pin_sent_message".tr,
                           style: Theme.of(context).textTheme.titleSmall
                       ),
                       const SizedBox(height: 24),
@@ -57,7 +57,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                               child: CircularProgressIndicator(),
                             ),
                             child: ElevatedButton(onPressed: _onTapVerifyButton,
-                                child:Text("Verify"),
+                                child:Text("verify".tr),
                             ),
                           );
                         }
@@ -82,10 +82,10 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.4,
                       ),
-                      text:"Have account? ",
+                      text:"have_account".tr,
                       children: [
                         TextSpan(
-                          text: 'Sign In',
+                          text: 'sign_in'.tr,
                           style: const TextStyle(
                             color: AppColors.themeColor
                           ),
@@ -130,7 +130,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
     _clearTextFields();
     if(result){
       if (mounted) {
-        showSnackBarMessage(context, "Pin Verification Successful");
+        showSnackBarMessage(context, "pin_verification_success".tr);
         Navigator.push(context, MaterialPageRoute(builder: (context) =>ResetPasswordScreen(
               email: widget.email,
               otp: _verificationPinTEController.text.trim(),

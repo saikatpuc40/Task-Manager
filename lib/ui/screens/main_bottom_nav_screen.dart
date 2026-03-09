@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/ui/screens/cancelled_task_screen.dart';
 import 'package:task_manager/ui/screens/completed_task_screen.dart';
 import 'package:task_manager/ui/screens/in_progress_task_screen.dart';
@@ -39,12 +40,12 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
            selectedItemColor: AppColors.themeColor,
            unselectedItemColor: Colors.grey,
            showUnselectedLabels: true,
-           items: const [
-             BottomNavigationBarItem(icon: Icon(Icons.abc), label: "New Task"),
-             BottomNavigationBarItem(icon: Icon(Icons.done), label: "Completed"),
-             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: "In Progress"),
-             BottomNavigationBarItem(icon: Icon(Icons.close), label: "Cancelled"),
-             BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+           items:  [
+             BottomNavigationBarItem(icon: Icon(Icons.abc), label: "new_task".tr),
+             BottomNavigationBarItem(icon: Icon(Icons.done), label: "completed".tr),
+             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: "in_Progress".tr),
+             BottomNavigationBarItem(icon: Icon(Icons.close), label: "cancelled".tr),
+             BottomNavigationBarItem(icon: Icon(Icons.settings), label: "settings".tr),
            ]
        ),
     );

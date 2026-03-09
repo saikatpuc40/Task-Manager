@@ -41,11 +41,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     children: [
                       const SizedBox(height: 80),
                       Text(
-                          "Set Password",
+                          "set_password".tr,
                           style: Theme.of(context).textTheme.titleLarge
                       ),
                       Text(
-                          "Give Minimum 6 digit password.password should be combination of letters and numbers",
+                          "password_instruction".tr,
                           style: Theme.of(context).textTheme.titleSmall
                       ),
 
@@ -53,12 +53,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       TextFormField(
                         controller: _passwordTEController,
                         decoration: InputDecoration(
-                          hintText: "Password"
+                          hintText: "password".tr
                         ),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (String?value){
                           if(value?.isEmpty??true){
-                            return 'Enter your password';
+                            return 'enter_password'.tr;
                           }
                           return null;
                         }
@@ -67,12 +67,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       TextFormField(
                         controller: _confirmPasswordTEController,
                         decoration: InputDecoration(
-                            hintText: "Confirm Password"
+                            hintText: "confirm_password".tr
                         ),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (String?value){
                           if(value?.isEmpty??true){
-                            return 'Enter your Confirm password';
+                            return 'enter_confirm_password'.tr;
                           }
                           return null;
                         }
@@ -86,7 +86,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               child: CircularProgressIndicator(),
                             ),
                             child: ElevatedButton(onPressed: _onTapConfirmButton,
-                                child:Text("Confirm"),
+                                child:Text("confirm".tr),
                             ),
                           );
                         }
@@ -100,10 +100,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
                           ),
-                          text:"Have account? ",
+                          text:"have_account".tr,
                           children: [
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'sign_in'.tr,
                               style: const TextStyle(
                                 color: AppColors.themeColor
                               ),
@@ -139,7 +139,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _clearTextFields();
       if(result){
         if(mounted){
-          showSnackBarMessage(context, "Password Reset Successful");
+          showSnackBarMessage(context, "password_reset_success".tr);
           Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()));
         }
       }

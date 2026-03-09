@@ -38,11 +38,11 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   TextFormField(
                     controller: _titleTEController,
                     decoration: InputDecoration(
-                      hintText: 'Title'
+                      hintText: 'title'.tr
                     ),
                     validator: (String? value){
                       if(value?.trim().isEmpty??true){
-                        return 'Enter your Title';
+                        return 'enter_title'.tr;
                       }
                       return null;
                     },
@@ -53,11 +53,11 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                     controller: _descriptionTEController,
                     maxLines: 5,
                     decoration: InputDecoration(
-                      hintText: "Description"
+                      hintText: "description".tr
                     ),
                     validator: (String? value){
                       if(value?.trim().isEmpty??true){
-                        return 'Enter your Description';
+                        return 'enter_description'.tr;
                       }
                       return null;
                     },
@@ -73,7 +73,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                         ),
                         child: ElevatedButton(onPressed: (){
                           _newTaskAddButton();
-                          }, child: const Text("Add")),
+                          }, child: Text("add".tr)),
                       );
                     }
                   ),
@@ -92,12 +92,12 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
      if(result){
        _clearTextFields();
        if(mounted){
-         showSnackBarMessage(context, "Task Added Successfully");
+         showSnackBarMessage(context, "task_added_success".tr);
        }
      }
      else{
        if(mounted){
-         showSnackBarMessage(context, taskController.errorMessage??"Task Add Failed!");
+         showSnackBarMessage(context, taskController.errorMessage??"task_add_failed".tr);
        }
      }
 

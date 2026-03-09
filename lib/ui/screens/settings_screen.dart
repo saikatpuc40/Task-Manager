@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/app.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,7 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             elevation: 6,
             child: ListTile(
               leading: Icon(Icons.mode),
-              title: Text("Change Mode"),
+              title: Text("change_mode".tr),
               onTap: (){
                 Get.bottomSheet(
                   Container(
@@ -32,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         ListTile(
                           leading: Icon(Icons.light_mode),
-                          title: Text("Light Mode"),
+                          title: Text("light_mode".tr),
                           onTap: (){
                             Get.changeThemeMode(ThemeMode.light);
                             Get.back();
@@ -40,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         ListTile(
                           leading: Icon(Icons.dark_mode),
-                          title: Text("Dark Mode"),
+                          title: Text("dark_mode".tr),
                           onTap: (){
                             Get.changeThemeMode(ThemeMode.dark);
                             Get.back();
@@ -49,6 +48,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                   )
+                );
+
+              },
+            ),
+          ),
+          Card(
+            color: Colors.white,
+            elevation: 6,
+            child: ListTile(
+              leading: Icon(Icons.language),
+              title: Text("change_language".tr),
+              onTap: (){
+                Get.bottomSheet(
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                              leading: Icon(Icons.light_mode),
+                              title: Text("english".tr),
+                              onTap: (){
+                                Get.updateLocale(Locale('en' , 'US'));
+                                Get.back();
+                              }
+                          ),
+                          ListTile(
+                              leading: Icon(Icons.dark_mode),
+                              title: Text("bangla".tr),
+                              onTap: (){
+                                Get.updateLocale(Locale('bn' , 'BD'));
+                                Get.back();
+                              }
+                          ),
+                        ],
+                      ),
+                    )
                 );
 
               },
