@@ -22,7 +22,7 @@ class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    final inProgressTask = taskController.taskMap["In Progress"]??[];
+    print('In Progress Task Screen');
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
@@ -30,6 +30,7 @@ class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
         },
         child: GetBuilder<TaskController>(
           builder: (_) {
+            final inProgressTask = taskController.taskMap["In Progress"]??[];
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(

@@ -23,7 +23,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final completedTask = taskController.taskMap["Completed"]??[];
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -31,6 +31,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
           },
         child: GetBuilder<TaskController>(
           builder: (_) {
+            final completedTask = taskController.taskMap["Completed"]??[];
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(

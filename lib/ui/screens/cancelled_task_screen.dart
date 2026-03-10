@@ -26,14 +26,14 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final cancelledTask = taskController.taskMap["Cancelled"]??[];
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
           taskController.fetchTasks("Cancelled", Urls.cancelledTask);
         },
         child: GetBuilder<TaskController>(
-          builder: (_) {
+            builder: (_) {
+            final cancelledTask = taskController.taskMap["Cancelled"]??[];
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(

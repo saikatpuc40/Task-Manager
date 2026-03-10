@@ -30,6 +30,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
       appBar: profileAppBar(context),
       body: _screens[_selectedIndex],
        bottomNavigationBar: BottomNavigationBar(
+           type: BottomNavigationBarType.fixed,
            currentIndex: _selectedIndex,
            onTap: (index){
              _selectedIndex=index;
