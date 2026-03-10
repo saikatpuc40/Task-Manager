@@ -168,7 +168,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     const SizedBox( width: 16,),
                     Expanded(
                       child: Text(
-                        _selectedImage?.name ?? 'no_image_selected',
+                        _selectedImage?.name ?? 'no_image_selected'.tr,
                         maxLines: 1,
                         style: const TextStyle(overflow: TextOverflow.ellipsis),
                       ))
