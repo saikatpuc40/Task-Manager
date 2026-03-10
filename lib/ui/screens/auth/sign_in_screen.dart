@@ -118,7 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.4,
                               ),
-                              text:"don't_have_account".tr,
+                              text:"dont_have_account".tr,
                               children: [
                                 TextSpan(
                                   text: 'sign_up'.tr,

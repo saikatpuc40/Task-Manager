@@ -43,7 +43,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
            items:  [
              BottomNavigationBarItem(icon: Icon(Icons.abc), label: "new_task".tr),
              BottomNavigationBarItem(icon: Icon(Icons.done), label: "completed".tr),
-             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: "in_Progress".tr),
+             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: "in_progress".tr),
              BottomNavigationBarItem(icon: Icon(Icons.close), label: "cancelled".tr),
              BottomNavigationBarItem(icon: Icon(Icons.settings), label: "settings".tr),
            ]
