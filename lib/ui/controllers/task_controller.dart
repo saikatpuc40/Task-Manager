@@ -46,7 +46,6 @@ class TaskController extends GetxController {
     }
   }
 
-
   Future<void> fetchTaskStatusCount() async {
     try {
       _isLoading = true;
@@ -113,7 +112,6 @@ class TaskController extends GetxController {
         // Remove locally instead of refetch all
         taskMap[status]?.removeWhere(
                 (task) => task.sId == id);
-
         await fetchTaskStatusCount();
         update();
         return true;
@@ -128,9 +126,7 @@ class TaskController extends GetxController {
     }
   }
 
-  Future<bool> updateTaskStatus(String id,
-      String oldStatus,
-      String newStatus) async {
+  Future<bool> updateTaskStatus(String id, String oldStatus, String newStatus) async {
     try {
       NetworkResponse response =
       await networkCaller.getRequest(

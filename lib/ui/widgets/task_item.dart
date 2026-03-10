@@ -66,7 +66,18 @@ class _TaskItemState extends State<TaskItem> {
                               child: CircularProgressIndicator(),
                             ),
                             child: IconButton(onPressed: () {
-                              _deleteTask();
+                              Get.defaultDialog(
+                                title:'Delete Task',
+                                titlePadding: EdgeInsets.all(20),
+                                contentPadding: EdgeInsets.all(20),
+                                middleText: 'Are you sure you want to delete this task?',
+                                textConfirm: 'Yes',
+                                textCancel: 'No',
+                                onConfirm: () {
+                                  _deleteTask();
+                                  Navigator.pop(context);
+                                }
+                              );
                             }, icon: Icon(Icons.delete)),
                           );
                         }
