@@ -5,6 +5,7 @@ import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
+import 'package:task_manager/ui/widgets/empty_list_widget.dart';
 import 'package:task_manager/ui/widgets/task_summary_card.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
@@ -49,6 +50,11 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                     );
                   }
                   final newTasks = taskController.taskMap["New"]??[];
+                  if(newTasks.isEmpty){
+                    return const Center(
+                      child: EmptyListWidget(),
+                    );
+                  }
                   return RefreshIndicator(
                     onRefresh: () async {
                       taskController.fetchTasks("New", Urls.newTask);
@@ -57,6 +63,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       child: ListView.builder(
                                 itemCount: newTasks.length,
                                 itemBuilder: (context, index) {
+
                                   return TaskItem(
                                     taskModel: newTasks[index],
                                     onUpdate: () {

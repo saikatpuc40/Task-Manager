@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
+import 'package:task_manager/ui/widgets/empty_list_widget.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
@@ -32,6 +33,11 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
         child: GetBuilder<TaskController>(
           builder: (_) {
             final completedTask = taskController.taskMap["Completed"]??[];
+            if(completedTask.isEmpty){
+              return const Center(
+                child: EmptyListWidget(),
+              );
+            }
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(
@@ -40,6 +46,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
               child: ListView.builder(
                 itemCount: completedTask.length,
                 itemBuilder: (context, index) {
+
                   return TaskItem(
                       taskModel:completedTask[index],
                       onUpdate: () {

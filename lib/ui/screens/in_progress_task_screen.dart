@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
+import 'package:task_manager/ui/widgets/empty_list_widget.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class InProgressTaskScreen extends StatefulWidget {
@@ -31,6 +32,11 @@ class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
         child: GetBuilder<TaskController>(
           builder: (_) {
             final inProgressTask = taskController.taskMap["In Progress"]??[];
+            if(inProgressTask.isEmpty){
+              return const Center(
+                child: EmptyListWidget(),
+              );
+            }
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(
@@ -39,6 +45,7 @@ class _InProgressTaskScreenState extends State<InProgressTaskScreen> {
               child: ListView.builder(
                 itemCount: inProgressTask.length,
                 itemBuilder: (context, index) {
+
                   return TaskItem(
                       taskModel: inProgressTask[index],
                       onUpdate: () {
