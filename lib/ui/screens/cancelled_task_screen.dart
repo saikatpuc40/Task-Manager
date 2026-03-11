@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/utilities/urls.dart';
 import 'package:task_manager/ui/controllers/task_controller.dart';
+import 'package:task_manager/ui/widgets/empty_list_widget.dart';
 import 'package:task_manager/ui/widgets/task_item.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   @override
   Widget build(BuildContext context) {
 
+
     return Scaffold(
       body:RefreshIndicator(
         onRefresh: () async {
@@ -34,6 +36,11 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
         child: GetBuilder<TaskController>(
             builder: (_) {
             final cancelledTask = taskController.taskMap["Cancelled"]??[];
+            if(cancelledTask.isEmpty){
+              return Center(
+                  child: EmptyListWidget()
+              );
+            }
             return Visibility(
               visible: taskController.isLoading == false,
               replacement: const Center(
