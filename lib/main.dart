@@ -9,7 +9,7 @@ void main() async {
   //       const TaskManagerApp(), // Wrap your app
   // );
   WidgetsFlutterBinding.ensureInitialized();
-  final languageController = Get.put(LanguageController());
+  final languageController = Get.put(LanguageController(),permanent: true);
   await languageController.loadLanguage();
   runApp(
     DevicePreview(
