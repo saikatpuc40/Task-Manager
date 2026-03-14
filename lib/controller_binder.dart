@@ -21,6 +21,7 @@ class ControllerBinder extends Bindings{
     Get.lazyPut(()=>EmailVerificationController());
     Get.lazyPut(()=>UpdateProfileController());
     Get.lazyPut(()=>SignUpController());
+    Get.lazyPut(()=>SignInControllers());
     Get.lazyPut(()=>ResetPasswordController());
     Get.lazyPut(()=>PinVerificationController());
   }

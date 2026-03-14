@@ -45,7 +45,9 @@ class AuthControllers extends GetxController{
 
   Future<void> clearAllData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.clear();
+    // await sharedPreferences.clear();
+    await sharedPreferences.remove(_accessTokenKey);
+    await sharedPreferences.remove(_userDataKey);
 
     accessToken = '';
     userData = null;
