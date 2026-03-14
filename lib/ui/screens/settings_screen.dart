@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/language_controller.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -72,7 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               leading: Icon(Icons.light_mode),
                               title: Text("english".tr),
                               onTap: (){
-                                Get.updateLocale(Locale('en' , 'US'));
+                                Get.find<LanguageController>().changeLanguage('en', 'US');
                                 Get.back();
                               }
                           ),
@@ -80,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               leading: Icon(Icons.dark_mode),
                               title: Text("bangla".tr),
                               onTap: (){
-                                Get.updateLocale(Locale('bn' , 'BD'));
+                                Get.find<LanguageController>().changeLanguage('bn', 'BD');
                                 Get.back();
                               }
                           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/controller_binder.dart';
 import 'package:task_manager/translations/app_translations.dart';
+import 'package:task_manager/ui/controllers/language_controller.dart';
 import 'package:task_manager/ui/screens/auth/splash_screen.dart';
 import 'package:task_manager/ui/utilities/app_colors.dart';
 
@@ -19,7 +20,7 @@ class TaskManagerApp extends StatelessWidget {
       darkTheme: darkThemeData(),
       themeMode:ThemeMode.light,
       initialBinding: ControllerBinder(),
-      locale: Locale('en' , 'US'),
+      locale: Get.find<LanguageController>().locale,
       fallbackLocale: Locale('en' , 'US'),
       translations: AppTranslations(),
     );
