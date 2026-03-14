@@ -4,4 +4,5 @@ class AssetPaths{
 
   static const String backgroundSvg = "$_imagePath/background.svg";
   static const String logoSvg ="$_imagePath/taskmanagerlogo.svg";
+  static const String applogo ="$_imagePath/task_logo.png";
 }
